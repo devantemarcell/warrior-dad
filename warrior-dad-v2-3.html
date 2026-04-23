@@ -1,0 +1,3668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warrior Dad Daily — Warrior Operating System</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #080808;
+  --dark: #101010;
+  --charcoal: #181818;
+  --panel: #1c1c1c;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dim: rgba(201,168,76,0.15);
+  --red: #7a1a1a;
+  --red-bright: #c0392b;
+  --green: #1a5c2a;
+  --green-bright: #27ae60;
+  --text: #e8e0d0;
+  --muted: #6a6458;
+  --border: rgba(201,168,76,0.18);
+  --border-hover: rgba(201,168,76,0.5);
+  --orange: #e8621a;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: 'Crimson Pro', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background: radial-gradient(ellipse at 20% 0%, rgba(201,168,76,0.04) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 100%, rgba(122,26,26,0.06) 0%, transparent 60%);
+  pointer-events:none; z-index:0;
+}
+
+/* BOTTOM NAV */
+nav {
+  position: fixed; bottom:0; left:0; right:0; top:auto; z-index:50;
+  background: rgba(8,8,8,0.97);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border);
+  border-bottom: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  height: 58px;
+}
+
+.nav-btn {
+  background: none; border: none; border-top: 2px solid transparent;
+  color: var(--muted); font-family: 'Cinzel', serif;
+  font-size: 18px; cursor: pointer; transition: all 0.2s;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 2px; padding: 6px 2px 4px;
+  width: 100%;
+}
+.nav-btn .nav-label {
+  font-size: 8px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: inherit; line-height: 1;
+}
+.nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.nav-btn.active { color: var(--gold); border-top-color: var(--gold); background: rgba(201,168,76,0.06); }
+
+.app { position:relative; z-index:1; max-width:700px; margin:0 auto; padding:24px 16px 76px; }
+
+/* HEADER */
+header {
+  text-align:center;
+  padding: 36px 0 28px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+.logo-row { display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:8px; }
+.logo-symbol { font-size:32px; }
+h1 {
+  font-family:'Cinzel',serif;
+  font-size: clamp(20px,5vw,28px);
+  font-weight:900;
+  letter-spacing:0.14em;
+  color: var(--gold);
+  text-transform:uppercase;
+}
+.subtitle { font-size:12px; color:var(--muted); letter-spacing:0.18em; text-transform:uppercase; margin-top:4px; }
+.date-line { font-size:13px; color:var(--muted); margin-top:10px; }
+
+/* PAGES */
+.page { display:none; }
+.page.active { display:block; }
+
+/* SECTION */
+.section { margin-bottom:28px; opacity:0; transform:translateY(12px); animation:rise 0.45s forwards; }
+.section:nth-child(1){animation-delay:.05s}
+.section:nth-child(2){animation-delay:.12s}
+.section:nth-child(3){animation-delay:.19s}
+.section:nth-child(4){animation-delay:.26s}
+.section:nth-child(5){animation-delay:.33s}
+.section:nth-child(6){animation-delay:.4s}
+@keyframes rise { to { opacity:1; transform:translateY(0); } }
+
+.section-label {
+  font-family:'Cinzel',serif;
+  font-size:10px;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:12px;
+  display:flex; align-items:center; gap:10px;
+}
+.section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* QUOTE CARD */
+.quote-card {
+  background: var(--charcoal);
+  border-left: 3px solid var(--gold);
+  padding: 18px 20px;
+  font-size:18px; font-style:italic; line-height:1.75;
+  color:#ccc8b8;
+}
+.quote-author { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-top:8px; }
+
+/* INPUTS */
+textarea, input[type=text], input[type=number], select {
+  background: var(--charcoal);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 14px 16px;
+  width:100%;
+  color: var(--text);
+  font-family: 'Crimson Pro', serif;
+  font-size:17px;
+  outline:none;
+  transition: border-color 0.3s;
+}
+textarea { resize:none; }
+textarea::placeholder, input::placeholder { color:var(--muted); font-style:italic; }
+textarea:focus, input:focus, select:focus { border-color: var(--gold); }
+select { appearance:none; cursor:pointer; }
+select option { background: var(--charcoal); }
+
+/* HABITS */
+.habits-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+/* habit-card styles defined in micro-interactions section below */
+
+/* SCORE BAR */
+.score-wrap { margin-top:12px; }
+.score-meta { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:6px; }
+.bar-bg { background:var(--panel); height:5px; border-radius:3px; overflow:hidden; }
+.bar-fill { height:100%; background:linear-gradient(90deg,var(--red-bright),var(--gold)); border-radius:3px; transition:width 0.5s ease; }
+
+/* BUTTONS */
+.btn-gold {
+  width:100%; background:transparent; border:1.5px solid var(--gold);
+  color:var(--gold); font-family:'Cinzel',serif; font-size:12px;
+  letter-spacing:0.2em; text-transform:uppercase; padding:15px;
+  cursor:pointer; transition:all 0.3s; border-radius:1px;
+}
+.btn-gold:hover { background:var(--gold); color:var(--black); }
+.btn-gold:active { transform:scale(0.99); }
+.btn-sm {
+  background:transparent; border:1px solid var(--border);
+  color:var(--muted); font-family:'Cinzel',serif; font-size:10px;
+  letter-spacing:0.15em; text-transform:uppercase; padding:8px 14px;
+  cursor:pointer; transition:all 0.25s; border-radius:1px;
+}
+.btn-sm:hover { border-color:var(--gold); color:var(--gold); }
+.btn-danger {
+  background:transparent; border:1px solid rgba(192,57,43,0.3);
+  color:rgba(192,57,43,0.6); font-size:11px; padding:6px 10px;
+  cursor:pointer; border-radius:1px; transition:all 0.2s; font-family:'Cinzel',serif; letter-spacing:0.1em;
+}
+.btn-danger:hover { border-color:var(--red-bright); color:var(--red-bright); }
+
+/* AI RESPONSE */
+.ai-bubble {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:2px;
+  padding:18px 20px;
+  font-size:16px; line-height:1.8;
+  font-style:italic;
+  color:#c8c0b0;
+  margin-top:12px;
+  position:relative;
+  min-height:60px;
+}
+.ai-bubble .ai-label {
+  font-family:'Cinzel',serif; font-size:10px; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--gold); margin-bottom:10px;
+  font-style:normal;
+}
+.ai-loading { display:flex; gap:6px; align-items:center; padding:4px 0; }
+.ai-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); opacity:0.4; animation:dotpulse 1.2s infinite; }
+.ai-dot:nth-child(2){animation-delay:.2s}
+.ai-dot:nth-child(3){animation-delay:.4s}
+@keyframes dotpulse { 0%,100%{opacity:0.4;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
+
+/* form-label kept for other sections */
+.form-label { font-size:11px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:5px; }
+
+/* LESSONS */
+.lesson-card {
+  background:var(--charcoal); border:1px solid var(--border);
+  border-radius:2px; padding:16px; margin-bottom:8px;
+  cursor:pointer; transition:border-color 0.2s;
+}
+.lesson-card:hover { border-color:var(--border-hover); }
+.lesson-cat {
+  font-family:'Cinzel',serif; font-size:10px; letter-spacing:0.15em;
+  text-transform:uppercase; color:var(--gold); margin-bottom:6px;
+}
+.lesson-title { font-size:17px; font-weight:600; margin-bottom:4px; }
+.lesson-body { font-size:15px; line-height:1.7; color:#b8b0a0; }
+.lesson-age { font-size:12px; color:var(--muted); margin-top:8px; }
+.lesson-filter { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.filter-tag {
+  background:var(--charcoal); border:1px solid var(--border);
+  color:var(--muted); font-family:'Cinzel',serif; font-size:10px;
+  letter-spacing:0.12em; text-transform:uppercase; padding:6px 12px;
+  border-radius:1px; cursor:pointer; transition:all 0.2s;
+}
+.filter-tag.active { border-color:var(--gold); color:var(--gold); background:var(--gold-dim); }
+
+/* WEEKLY REPORT */
+.report-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; }
+.stat-card {
+  background:var(--charcoal); border:1px solid var(--border);
+  border-radius:2px; padding:16px;
+  text-align:center;
+}
+.stat-num { font-family:'Cinzel',serif; font-size:28px; color:var(--gold); margin-bottom:4px; }
+.stat-label { font-size:12px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
+.streak-row { display:flex; gap:6px; margin-top:10px; }
+.streak-day {
+  flex:1; height:32px; border-radius:2px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.1em;
+  text-transform:uppercase; color:var(--muted);
+}
+.streak-day.hit { background:var(--gold-dim); border:1px solid rgba(201,168,76,0.3); color:var(--gold); }
+.streak-day.miss { background:var(--panel); border:1px solid rgba(255,255,255,0.05); }
+
+/* LOG */
+.log-entry {
+  background:var(--charcoal); border:1px solid var(--border);
+  border-radius:2px; padding:14px 16px; margin-bottom:8px;
+}
+.log-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.log-date { font-size:11px; color:var(--muted); letter-spacing:0.1em; }
+.log-score { font-family:'Cinzel',serif; font-size:11px; color:var(--gold); }
+.log-intention { font-size:16px; font-style:italic; margin-bottom:6px; color:#c8c0b0; }
+.log-lesson { font-size:14px; color:var(--muted); }
+.log-habits { font-size:12px; color:var(--muted); margin-top:6px; }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--charcoal); border:1px solid var(--gold); color:var(--gold);
+  font-family:'Cinzel',serif; font-size:11px; letter-spacing:0.18em;
+  padding:12px 28px; border-radius:1px; opacity:0; transition:all 0.4s;
+  pointer-events:none; z-index:200;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* GOALS */
+.goal-item {
+  background:var(--charcoal); border:1px solid var(--border);
+  border-radius:2px; padding:14px 16px; margin-bottom:8px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.goal-check { margin-top:3px; cursor:pointer; }
+.goal-content { flex:1; }
+.goal-title { font-size:16px; margin-bottom:3px; }
+.goal-title.done-text { text-decoration:line-through; color:var(--muted); }
+.goal-category { font-family:'Cinzel',serif; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); }
+.goal-progress-bar { margin-top:8px; }
+.prog-bg { background:var(--panel); height:3px; border-radius:2px; overflow:hidden; }
+.prog-fill { height:100%; background:var(--gold); border-radius:2px; transition:width 0.4s; }
+.prog-label { font-size:11px; color:var(--muted); margin-top:4px; }
+.goal-form { background:var(--panel); border:1px solid var(--border); border-radius:2px; padding:16px; margin-bottom:16px; }
+.goal-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+.full-col { grid-column:1/-1; }
+
+@media(max-width:500px) {
+  .stock-form { grid-template-columns:1fr 1fr; }
+  .report-grid { grid-template-columns:1fr 1fr; }
+  .habits-grid { grid-template-columns:1fr; }
+}
+
+/* ===== HERO BANNER ===== */
+.hero-banner {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  margin-bottom: 0;
+  padding: 40px 20px 36px;
+  background: linear-gradient(160deg, #0a0000 0%, #1a0800 30%, #0d0d00 60%, #000a12 100%);
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, #c0200a, #e8621a, #f0c040, #e8621a, #c0200a) 1;
+}
+.hero-banner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(240,192,64,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 100%, rgba(232,98,26,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(192,32,10,0.12) 0%, transparent 50%);
+  pointer-events: none;
+}
+.hero-flames {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+}
+.hero-flame {
+  position: absolute; bottom: 0; border-radius: 50% 50% 20% 20%;
+  animation: flameRise linear infinite; opacity: 0;
+}
+@keyframes flameRise {
+  0%   { transform: translateY(0) scaleX(1); opacity: 0; }
+  15%  { opacity: 0.7; }
+  85%  { opacity: 0.3; }
+  100% { transform: translateY(-280px) scaleX(0.3); opacity: 0; }
+}
+.hero-eyebrow {
+  position: relative; z-index: 1;
+  font-family: 'Cinzel', serif;
+  font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--orange, #e8621a);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,98,26,0.6));
+}
+.hero-eyebrow::after { background: linear-gradient(90deg, rgba(232,98,26,0.6), transparent); }
+.hero-title {
+  position: relative; z-index: 1;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(28px, 8vw, 48px);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #ffffff 0%, #f0c040 35%, #e8621a 65%, #f0c040 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 0 30px rgba(240,192,64,0.4));
+  margin-bottom: 6px;
+  animation: titlePulse 4s ease-in-out infinite;
+}
+@keyframes titlePulse {
+  0%,100% { filter: drop-shadow(0 0 20px rgba(240,192,64,0.3)); }
+  50%      { filter: drop-shadow(0 0 50px rgba(240,192,64,0.7)) drop-shadow(0 0 80px rgba(232,98,26,0.4)); }
+}
+.hero-subtitle {
+  position: relative; z-index: 1;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(10px, 2.5vw, 13px);
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: rgba(240,192,64,0.6);
+  margin-bottom: 22px;
+}
+.hero-pills {
+  position: relative; z-index: 1;
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.hero-pill {
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(240,192,64,0.3);
+  border-radius: 40px;
+  padding: 7px 16px;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(9px, 2vw, 11px);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text, #f0ece0);
+  backdrop-filter: blur(4px);
+  animation: pillGlow 3s ease-in-out infinite;
+}
+.hero-pill:nth-child(2) { animation-delay: 1s; }
+.hero-pill:nth-child(3) { animation-delay: 2s; }
+@keyframes pillGlow {
+  0%,100% { border-color: rgba(240,192,64,0.2); box-shadow: none; }
+  50%      { border-color: rgba(240,192,64,0.6); box-shadow: 0 0 12px rgba(240,192,64,0.2); }
+}
+.hero-pill-icon { font-size: 14px; }
+.hero-cta {
+  position: relative; z-index: 1;
+  font-family: 'Cinzel', serif;
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  animation: fadeInOut 2s ease-in-out infinite;
+}
+@keyframes fadeInOut { 0%,100%{opacity:0.4} 50%{opacity:0.8} }
+.hero-days {
+  position: relative; z-index: 1;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(36px, 10vw, 60px);
+  font-weight: 900;
+  color: var(--orange, #e8621a);
+  line-height: 1;
+  text-shadow: 0 0 40px rgba(232,98,26,0.8), 0 0 80px rgba(240,192,64,0.3);
+  margin-bottom: 2px;
+}
+.hero-days-label {
+  position: relative; z-index: 1;
+  font-family: 'Cinzel', serif;
+  font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: rgba(232,98,26,0.7);
+  margin-bottom: 18px;
+}
+
+/* ===== FACE THE FEAR ===== */
+.fear-hero {
+  background: linear-gradient(135deg, #1a0000 0%, #2a0800 50%, #1a0000 100%);
+  border: 1px solid rgba(192,32,10,0.4);
+  border-left: 4px solid #c0200a;
+  border-radius: 3px;
+  padding: 20px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.fear-hero-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(18px, 5vw, 26px);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #ff4020, #c0200a);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 8px;
+}
+.fear-hero-sub {
+  font-size: 15px; font-style: italic; color: rgba(240,224,208,0.6); line-height: 1.6;
+}
+.fear-card {
+  background: var(--charcoal);
+  border: 1px solid rgba(192,32,10,0.2);
+  border-left: 3px solid #c0200a;
+  border-radius: 3px;
+  padding: 16px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.fear-card-title {
+  font-family: 'Cinzel', serif; font-size: 13px; color: #ff6040;
+  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px;
+}
+.fear-card-text { font-size: 15px; line-height: 1.6; margin-bottom: 6px; }
+.fear-card-cost { font-size: 13px; font-style: italic; color: rgba(240,224,208,0.5); margin-bottom: 6px; }
+.fear-card-action {
+  font-size: 13px; color: var(--gold);
+  border-top: 1px solid rgba(240,192,64,0.15); padding-top: 8px; margin-top: 8px;
+}
+.fear-card-action::before { content: '⚔ Action: '; font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
+.fear-conquered { border-left-color: var(--gold); opacity: 0.6; }
+.fear-conquered .fear-card-title { color: var(--gold); }
+.legacy-bar-wrap { margin-bottom: 14px; }
+.legacy-bar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
+.legacy-bar-label span:first-child { color: var(--text); }
+.legacy-bar-label span:last-child { font-family: 'Cinzel', serif; font-size: 11px; color: var(--gold); }
+.mirror-card {
+  background: linear-gradient(135deg, rgba(240,192,64,0.06), rgba(232,98,26,0.04));
+  border: 1px solid rgba(240,192,64,0.2);
+  border-radius: 3px; padding: 16px; margin-bottom: 10px;
+}
+.mirror-q { font-size: 16px; font-style: italic; color: #d8d0c0; margin-bottom: 10px; line-height: 1.6; }
+.mirror-q-num { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--orange); margin-bottom: 6px; }
+.mirror-score-display {
+  background: var(--charcoal); border: 1px solid var(--border);
+  border-radius: 3px; padding: 16px; text-align: center; margin-top: 12px;
+}
+.mirror-score-num {
+  font-family: 'Cinzel', serif; font-size: 48px; font-weight: 900;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  line-height: 1;
+}
+.mirror-score-label { font-size: 12px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 6px; }
+.mirror-verdict { font-size: 16px; font-style: italic; color: #c8c0b0; margin-top: 10px; line-height: 1.6; }
+.past-mirror { background: var(--charcoal); border: 1px solid var(--border); border-radius: 3px; padding: 14px; margin-bottom: 8px; }
+.past-mirror-date { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 6px; }
+.past-mirror-score { font-family: 'Cinzel', serif; font-size: 22px; color: var(--gold); }
+
+/* ===== WEEKLY IDEA ===== */
+.idea-card {
+  background: linear-gradient(135deg, var(--charcoal), #141408);
+  border: 1px solid rgba(240,192,64,0.2);
+  border-radius: 3px;
+  padding: 18px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.idea-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--orange));
+}
+.idea-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.idea-ticker { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px rgba(240,192,64,0.4); }
+.idea-type { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; background: rgba(240,192,64,0.1); border: 1px solid rgba(240,192,64,0.25); color: var(--gold); }
+.idea-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
+.idea-thesis { font-size: 15px; line-height: 1.75; color: #c0b8a8; font-style: italic; margin-bottom: 12px; }
+.idea-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+.idea-tag { font-size: 12px; font-family: 'Cinzel', serif; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.08); color: var(--muted); }
+.risk-low { border-color: rgba(39,174,96,0.3); color: #27ae60; }
+.risk-medium { border-color: rgba(240,192,64,0.3); color: var(--gold); }
+.risk-high { border-color: rgba(192,32,10,0.3); color: var(--red-bright); }
+.idea-date { font-size:11px; color: var(--muted); margin-top: 10px; letter-spacing: 0.1em; }
+.idea-disclaimer { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 6px; }
+
+/* ===== MEMORIES ===== */
+.mem-upload-zone {
+  background: var(--charcoal);
+  border: 2px dashed rgba(240,192,64,0.25);
+  border-radius: 4px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.mem-upload-zone:hover { border-color: var(--gold); background: rgba(240,192,64,0.04); }
+.mem-upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.mem-upload-icon { font-size: 36px; margin-bottom: 8px; }
+.mem-upload-text { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+.mem-upload-sub { font-size: 13px; color: var(--muted); margin-top: 4px; font-style: italic; }
+.mem-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.mem-tag {
+  background: var(--charcoal); border: 1px solid rgba(240,192,64,0.15);
+  color: var(--muted); font-size: 13px; padding: 7px 14px;
+  border-radius: 20px; cursor: pointer; transition: all 0.2s; user-select: none;
+}
+.mem-tag.selected { border-color: var(--gold); color: var(--gold); background: rgba(240,192,64,0.1); box-shadow: 0 0 10px rgba(240,192,64,0.15); }
+.mem-preview { width: 100%; max-height: 220px; object-fit: cover; border-radius: 3px; margin-top: 10px; display: none; border: 1px solid rgba(240,192,64,0.2); }
+.mem-timeline { display: flex; flex-direction: column; gap: 0; }
+.mem-date-group { margin-bottom: 20px; }
+.mem-date-label {
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.mem-date-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+.mem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mem-card {
+  position: relative; border-radius: 3px; overflow: hidden;
+  background: var(--charcoal); border: 1px solid rgba(240,192,64,0.1);
+  cursor: pointer; transition: transform 0.2s;
+  aspect-ratio: 1;
+}
+.mem-card:hover { transform: scale(1.02); border-color: rgba(240,192,64,0.35); }
+.mem-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mem-card-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.85));
+  padding: 8px;
+}
+.mem-card-tag { font-size: 11px; color: var(--gold); font-family: 'Cinzel', serif; letter-spacing: 0.1em; }
+.mem-card-delete {
+  position: absolute; top: 6px; right: 6px;
+  background: rgba(0,0,0,0.7); border: 1px solid rgba(255,60,26,0.4);
+  color: var(--red-bright); font-size: 11px; width: 24px; height: 24px;
+  border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.2s;
+}
+.mem-card:hover .mem-card-delete { opacity: 1; }
+.mem-lightbox {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+  z-index: 300; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 20px;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.mem-lightbox.open { opacity: 1; pointer-events: all; }
+.mem-lightbox img { max-width: 100%; max-height: 70vh; object-fit: contain; border-radius: 3px; }
+.mem-lightbox-tag { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-top: 14px; }
+.mem-lightbox-date { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.mem-lightbox-close { position: absolute; top: 20px; right: 20px; background: none; border: 1px solid rgba(255,255,255,0.2); color: var(--text); font-size: 18px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.mem-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+.mem-stat { background: var(--charcoal); border: 1px solid rgba(240,192,64,0.1); border-radius: 3px; padding: 12px 8px; text-align: center; }
+.mem-stat-num { font-family: 'Cinzel', serif; font-size: 20px; color: var(--gold); }
+.mem-stat-label { font-size: 10px; color: var(--muted); margin-top: 3px; letter-spacing: 0.08em; }
+.mem-filter { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.mem-filter-btn { background: var(--charcoal); border: 1px solid rgba(240,192,64,0.12); color: var(--muted); font-size: 12px; padding: 5px 12px; border-radius: 16px; cursor: pointer; transition: all 0.2s; }
+.mem-filter-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(240,192,64,0.08); }
+.mem-empty { text-align: center; padding: 40px 20px; color: var(--muted); }
+.mem-empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+.mem-empty-text { font-size: 15px; font-style: italic; }
+
+/* ===== UPGRADED GOALS ===== */
+.goals-tabs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.goals-tab {
+  background: var(--charcoal); border: 1px solid var(--border);
+  color: var(--muted); font-family: 'Cinzel', serif; font-size: 11px;
+  letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 6px;
+  border-radius: 3px; cursor: pointer; transition: all 0.2s;
+}
+.goals-tab.active { background: rgba(240,192,64,0.1); border-color: var(--gold); color: var(--gold); }
+.task-card {
+  background: var(--charcoal); border: 1px solid var(--border);
+  border-left: 3px solid var(--gold); border-radius: 3px;
+  padding: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px;
+  transition: opacity 0.3s;
+}
+.task-card.done-task { border-left-color: var(--green-bright); opacity: 0.55; }
+.task-check {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid var(--gold); display: flex; align-items: center;
+  justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.2s;
+  font-size: 14px; color: transparent;
+}
+.task-check.checked { background: var(--gold); color: #000; border-color: var(--gold); }
+.task-info { flex: 1; min-width: 0; }
+.task-title { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+.task-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.task-cat { font-size: 12px; color: var(--muted); }
+.task-time {
+  font-family: 'Cinzel', serif; font-size: 11px; color: var(--orange);
+  letter-spacing: 0.08em; background: rgba(232,98,26,0.1);
+  border: 1px solid rgba(232,98,26,0.2); border-radius: 10px; padding: 2px 8px;
+}
+.weekly-card {
+  background: var(--charcoal); border: 1px solid var(--border);
+  border-left: 3px solid var(--orange); border-radius: 3px; padding: 14px; margin-bottom: 8px;
+}
+.weekly-card.done-task { border-left-color: var(--green-bright); opacity: 0.55; }
+.monthly-card {
+  background: var(--charcoal); border: 1px solid var(--border);
+  border-left: 3px solid #a060ff; border-radius: 3px; padding: 16px; margin-bottom: 10px;
+}
+.monthly-card.done-task { opacity: 0.55; }
+.monthly-progress { margin-top: 10px; }
+
+/* ===== LETTER VAULT ===== */
+.letter-card {
+  background: linear-gradient(135deg,#0c0814,#14102a);
+  border: 1px solid rgba(160,96,255,0.2);
+  border-left: 3px solid #a060ff;
+  border-radius: 3px; padding: 16px; margin-bottom: 10px; position: relative;
+}
+.letter-card-type {
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: #a060ff; margin-bottom: 6px;
+}
+.letter-card-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; color: #e0d8f0; }
+.letter-card-preview { font-size: 14px; font-style: italic; color: #8070a0; line-height: 1.6; }
+.letter-card-date { font-size: 11px; color: var(--muted); margin-top: 8px; }
+.letter-expanded { display: none; }
+.letter-expanded.open {
+  display: block; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid rgba(160,96,255,0.15);
+  font-size: 16px; line-height: 1.8; color: #c8c0d8; white-space: pre-wrap;
+}
+/* ===== WDS BREAKDOWN ===== */
+.wds-pill {
+  background: rgba(240,192,64,0.06); border: 1px solid rgba(240,192,64,0.12);
+  border-radius: 3px; padding: 8px 4px; text-align: center;
+}
+.wds-pill-num { font-family: 'Cinzel', serif; font-size: 16px; color: var(--gold); }
+.wds-pill-label { font-size: 9px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+
+/* ===== READING TRACKER ===== */
+.book-card {
+  background: var(--charcoal);
+  border: 1px solid var(--border);
+  border-radius: 3px; padding: 16px; margin-bottom: 10px;
+  position: relative; overflow: hidden;
+}
+.book-card::before {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px;
+}
+.book-card.status-reading::before { background: var(--gold); }
+.book-card.status-done::before { background: var(--green-bright); }
+.book-card.status-next::before { background: var(--muted); }
+.book-title { font-size: 17px; font-weight: 700; margin-bottom: 3px; line-height: 1.3; }
+.book-author { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.book-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.book-tag {
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 10px;
+  border: 1px solid rgba(240,192,64,0.2); color: var(--muted);
+}
+.book-status-badge {
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 10px;
+}
+.book-status-badge.reading { background: rgba(240,192,64,0.1); color: var(--gold); border: 1px solid rgba(240,192,64,0.25); }
+.book-status-badge.done { background: rgba(39,174,96,0.1); color: var(--green-bright); border: 1px solid rgba(39,174,96,0.25); }
+.book-status-badge.next { background: rgba(100,100,100,0.1); color: var(--muted); border: 1px solid rgba(100,100,100,0.2); }
+.book-takeaway { font-size: 15px; font-style: italic; color: #a09880; line-height: 1.7; margin-bottom: 8px; }
+.book-rating { font-size: 15px; margin-bottom: 6px; }
+.book-date { font-size: 11px; color: var(--muted); }
+
+
+/* ===== 5-MINUTE DRIFTER ===== */
+.drifter-wrap {
+  background: linear-gradient(160deg,#06080a,#0a0e14,#06080a);
+  border: 1px solid rgba(0,180,255,0.2);
+  border-left: 4px solid #00b4ff;
+  border-radius: 4px; overflow: hidden;
+}
+.drifter-header {
+  background: linear-gradient(90deg,rgba(0,100,180,0.15),transparent);
+  padding: 14px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid rgba(0,180,255,0.12);
+}
+.drifter-header-icon { font-size: 20px; }
+.drifter-header-text { flex: 1; }
+.drifter-header-title {
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #00b4ff; margin-bottom: 2px;
+}
+.drifter-header-sub { font-size: 12px; color: var(--muted); font-style: italic; }
+.drifter-timer {
+  font-family: 'Cinzel', serif; font-size: 18px; font-weight: 900;
+  color: #00b4ff; letter-spacing: 0.05em; min-width: 44px; text-align: right;
+}
+.drifter-body { padding: 16px; display: grid; gap: 14px; }
+.drifter-step {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 3px; padding: 14px;
+}
+.drifter-step-num {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #00b4ff; margin-bottom: 6px;
+}
+.drifter-prompt {
+  font-size: 17px; font-style: italic; color: var(--text);
+  line-height: 1.6; margin-bottom: 10px; min-height: 44px;
+}
+.drifter-prompt-loading {
+  display: flex; gap: 5px; align-items: center; padding: 4px 0;
+}
+.drifter-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #00b4ff; opacity: 0.4; animation: dotpulse 1.2s infinite;
+}
+.drifter-dot:nth-child(2){animation-delay:.2s}
+.drifter-dot:nth-child(3){animation-delay:.4s}
+.drifter-check {
+  display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer;
+}
+.drifter-checkbox {
+  width: 20px; height: 20px; border-radius: 3px; border: 2px solid rgba(0,180,255,0.4);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; transition: all 0.2s; margin-top: 2px;
+}
+.drifter-checkbox.checked { background: #00b4ff; border-color: #00b4ff; color: #000; }
+.drifter-check-label { font-size: 15px; line-height: 1.5; color: #c0c8d0; }
+.drifter-nonneg {
+  background: rgba(240,192,64,0.06); border: 1px solid rgba(240,192,64,0.2);
+  border-radius: 3px; padding: 10px 12px; font-size: 15px;
+  font-style: italic; color: var(--gold); margin-bottom: 10px; min-height: 36px;
+  line-height: 1.6;
+}
+.drifter-warrior-status {
+  background: linear-gradient(135deg,rgba(240,192,64,0.08),rgba(232,98,26,0.05));
+  border: 1px solid rgba(240,192,64,0.2); border-radius: 3px; padding: 12px;
+  display: flex; align-items: center; gap: 12px;
+}
+.drifter-streak-num {
+  font-family: 'Cinzel', serif; font-size: 28px; font-weight: 900; color: var(--gold); line-height: 1;
+}
+.drifter-streak-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.drifter-streak-msg { font-size: 14px; font-style: italic; color: #a09070; line-height: 1.5; }
+.drifter-complete {
+  text-align: center; padding: 16px;
+  display: none;
+}
+.drifter-complete.show { display: block; }
+.drifter-complete-icon { font-size: 40px; margin-bottom: 8px; }
+.drifter-complete-title {
+  font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
+}
+.drifter-complete-sub { font-size: 14px; color: var(--muted); font-style: italic; }
+
+/* ===== MICRO-INTERACTIONS ===== */
+
+/* Habit card — gold pulse on check */
+@keyframes habitCheck {
+  0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+  30%  { transform: scale(1.04); box-shadow: 0 0 0 8px rgba(201,168,76,0.18); }
+  60%  { transform: scale(0.98); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+}
+.habit-card.just-checked {
+  animation: habitCheck 0.45s ease forwards;
+}
+.hcheck {
+  transition: background 0.25s, border-color 0.25s, color 0.2s, transform 0.2s;
+}
+.habit-card.done .hcheck {
+  transform: scale(1.1);
+}
+
+/* Score bar — smooth color shift at milestones */
+.bar-fill {
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes barPerfect {
+  0%,100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+  50%     { box-shadow: 0 0 12px 3px rgba(201,168,76,0.5); }
+}
+.bar-fill.perfect { animation: barPerfect 1.2s ease 0.6s; }
+
+/* Seal the Day — ceremony flash */
+@keyframes sealFlash {
+  0%   { opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; pointer-events: none; }
+}
+#sealCeremony {
+  position: fixed; inset: 0; z-index: 500;
+  background: radial-gradient(ellipse at 50% 40%, rgba(201,168,76,0.22) 0%, rgba(0,0,0,0.96) 70%);
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  pointer-events: none; opacity: 0;
+}
+#sealCeremony.firing {
+  display: flex;
+  animation: sealFlash 1.8s ease forwards;
+}
+.seal-icon { font-size: 56px; margin-bottom: 16px; filter: drop-shadow(0 0 24px rgba(201,168,76,0.8)); }
+.seal-title {
+  font-family: 'Cinzel', serif; font-size: 22px; font-weight: 900;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 8px;
+}
+.seal-sub { font-size: 15px; font-style: italic; color: rgba(240,224,208,0.6); }
+
+/* Fear conquered — border shift red → gold */
+.fear-card {
+  transition: border-left-color 0.6s ease, opacity 0.4s ease, background 0.4s ease;
+}
+@keyframes fearConquer {
+  0%  { transform: scale(1); }
+  40% { transform: scale(1.02); }
+  100%{ transform: scale(1); }
+}
+.fear-card.fear-conquering { animation: fearConquer 0.4s ease; }
+
+/* Letter sealed — envelope drop */
+@keyframes letterSeal {
+  0%   { transform: translateY(0) scale(1); opacity: 1; }
+  40%  { transform: translateY(-8px) scale(1.03); }
+  70%  { transform: translateY(3px) scale(0.98); }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.letter-card.just-sealed { animation: letterSeal 0.5s ease; }
+
+/* Drifter complete — power burst */
+@keyframes drifterBurst {
+  0%   { transform: scale(0.95); opacity: 0; }
+  50%  { transform: scale(1.03); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.drifter-complete.show { animation: drifterBurst 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+/* Button press haptic feel */
+.btn-gold:active { transform: scale(0.97); transition: transform 0.08s; }
+.btn-sm:active   { transform: scale(0.96); transition: transform 0.08s; }
+
+/* Streak milestone — glow */
+@keyframes streakGlow {
+  0%,100% { text-shadow: 0 0 0 rgba(201,168,76,0); }
+  50%     { text-shadow: 0 0 20px rgba(201,168,76,0.7), 0 0 40px rgba(232,98,26,0.4); }
+}
+.drifter-streak-num.milestone { animation: streakGlow 1.5s ease 3; }
+
+/* Toast — slide up with spring */
+.toast {
+  transition: opacity 0.25s, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  transform: translateY(20px);
+}
+.toast.show { transform: translateY(0); }
+
+/* Mirror submit — score count up handled in JS */
+@keyframes scoreCountUp {
+  from { transform: scale(0.7); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.mirror-score-num { animation: none; }
+.mirror-score-num.animate { animation: scoreCountUp 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+/* Input focus lift */
+textarea:focus, input[type=text]:focus, input[type=number]:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(201,168,76,0.08);
+  transition: border-color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+/* Nav active tab indicator pulse */
+@keyframes navActivePop {
+  0%   { transform: scaleY(1); }
+  50%  { transform: scaleY(1.5); }
+  100% { transform: scaleY(1); }
+}
+.nav-btn.active::before {
+  content: '';
+  position: absolute; top: 0; left: 20%; right: 20%; height: 2px;
+  background: var(--gold);
+  animation: navActivePop 0.3s ease;
+}
+.nav-btn { position: relative; }
+
+/* ===== MICRO-INTERACTIONS ===== */
+
+/* Habit card — richer check animation */
+.habit-card {
+  position: relative; overflow: hidden;
+}
+.habit-card::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at center, rgba(201,168,76,0.18) 0%, transparent 70%);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s;
+}
+.habit-card.done::after { opacity: 1; }
+.habit-card.just-checked {
+  animation: habitPop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes habitPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+.hcheck { transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+.habit-card.done .hcheck {
+  transform: scale(1.15);
+  box-shadow: 0 0 10px rgba(201,168,76,0.5);
+}
+
+/* Score bar — glowing pulse when complete */
+.bar-fill {
+  transition: width 0.6s cubic-bezier(0.34,1.2,0.64,1);
+  position: relative;
+}
+.bar-fill.perfect {
+  animation: barGlow 1.5s ease-in-out infinite alternate;
+}
+@keyframes barGlow {
+  from { box-shadow: 0 0 4px rgba(201,168,76,0.4); }
+  to   { box-shadow: 0 0 14px rgba(201,168,76,0.9); }
+}
+
+/* Seal the Day — ceremony overlay */
+
+@keyframes sealFlash {
+  0%   { background: rgba(0,0,0,0); }
+  15%  { background: rgba(201,168,76,0.12); }
+  40%  { background: rgba(201,168,76,0.08); }
+  100% { background: rgba(0,0,0,0); }
+}
+
+
+/* Fear conquered — border glow transition */
+.fear-card {
+  transition: border-left-color 0.6s ease, opacity 0.4s ease, box-shadow 0.6s ease;
+}
+.fear-card.fear-conquered {
+  border-left-color: var(--gold);
+  box-shadow: -2px 0 12px rgba(201,168,76,0.2);
+}
+.fear-just-conquered {
+  animation: fearConquer 0.5s cubic-bezier(0.34,1.4,0.64,1);
+}
+@keyframes fearConquer {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* Toast — richer slide up */
+.toast {
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.34,1.3,0.64,1);
+  transform: translateY(20px) translateX(-50%);
+  opacity: 0;
+}
+.toast.show {
+  transform: translateY(0) translateX(-50%);
+  opacity: 1;
+}
+
+/* Button press feedback */
+.btn-gold:active { transform: scale(0.97); box-shadow: 0 0 20px rgba(201,168,76,0.3); }
+.btn-sm:active   { transform: scale(0.97); }
+
+/* Input focus glow */
+textarea:focus, input[type=text]:focus, input[type=number]:focus {
+  box-shadow: 0 0 0 1px rgba(201,168,76,0.3), 0 0 12px rgba(201,168,76,0.08);
+}
+
+/* Drifter complete — celebration pulse */
+.drifter-complete.show .drifter-complete-icon {
+  animation: drifterCelebrate 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.1s both;
+}
+@keyframes drifterCelebrate {
+  0%   { transform: scale(0.5); opacity:0; }
+  70%  { transform: scale(1.2); opacity:1; }
+  100% { transform: scale(1); }
+}
+
+/* Letter sealed — shimmer effect */
+.letter-card.just-sealed {
+  animation: letterShimmer 0.7s ease-out;
+}
+@keyframes letterShimmer {
+  0%   { box-shadow: -3px 0 0 #a060ff; }
+  50%  { box-shadow: -3px 0 20px rgba(160,96,255,0.5); }
+  100% { box-shadow: none; }
+}
+
+/* Warrior Dad Score — count up animation handled in JS */
+#wds-number { transition: color 0.5s ease; }
+
+/* Page transition — subtle fade */
+.page.active {
+  animation: pageFadeIn 0.3s ease-out;
+}
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== AUTH MODAL ===== */
+.auth-modal-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,0.95);
+  display: none; align-items: center; justify-content: center; padding: 24px;
+}
+.auth-modal-overlay.open { display: flex; }
+.auth-modal {
+  background: linear-gradient(160deg,#0a0800,#181000);
+  border: 1px solid rgba(240,192,64,0.25); border-radius: 6px;
+  padding: 32px 24px; max-width: 360px; width: 100%;
+}
+.auth-modal-title {
+  font-family: 'Cinzel', serif; font-size: 16px; font-weight: 900;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+  text-align: center; margin-bottom: 6px;
+}
+.auth-modal-sub {
+  font-size: 13px; color: var(--muted); text-align: center;
+  font-style: italic; margin-bottom: 20px; line-height: 1.5;
+}
+.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 18px; }
+.auth-tab {
+  background: var(--charcoal); border: 1px solid var(--border); color: var(--muted);
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.15em;
+  text-transform: uppercase; padding: 8px; border-radius: 2px; cursor: pointer;
+}
+.auth-tab.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.08); }
+.auth-error { font-size: 13px; color: var(--red-bright); margin-top: 8px; text-align: center; min-height: 18px; }
+.auth-skip { font-size:12px; color:var(--muted); text-align:center; margin-top:14px; cursor:pointer; text-decoration:underline; font-style:italic; }
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <button class="nav-btn active" data-page="today"><span>⚔</span><span class="nav-label">Today</span></button>
+  <button class="nav-btn" data-page="mission"><span>🎯</span><span class="nav-label">Mission</span></button>
+  <button class="nav-btn" data-page="wisdom"><span>📖</span><span class="nav-label">Wisdom</span></button>
+  <button class="nav-btn" data-page="progress"><span>📊</span><span class="nav-label">Progress</span></button>
+  <button class="nav-btn" data-page="legacy"><span>🔱</span><span class="nav-label">Legacy</span></button>
+  <button class="nav-btn" data-page="vault"><span>🗄</span><span class="nav-label">Vault</span></button>
+</nav>
+
+<div class="app">
+
+  <!-- ===== DAILY PAGE ===== -->
+  <div class="page active" id="page-today">
+
+  <!-- HERO BANNER -->
+  <div class="hero-banner" id="heroBanner">
+    <div class="hero-flames" id="heroFlames"></div>
+    <div class="hero-eyebrow">Warrior Dad Daily</div>
+    <div class="hero-title">30 Days.<br>No Excuses.</div>
+    <div class="hero-subtitle">Strength · Presence · Legacy</div>
+    <div class="hero-pills">
+      <div class="hero-pill"><span class="hero-pill-icon">💪</span>Stronger Body</div>
+      <div class="hero-pill"><span class="hero-pill-icon">🧠</span>Sharper Mind</div>
+      <div class="hero-pill"><span class="hero-pill-icon">🔱</span>Unshakable Discipline</div>
+    </div>
+    <div class="hero-cta">Scroll down — begin your day ↓</div>
+  </div>
+
+  <header>
+    <div class="logo-row">
+      <span class="logo-symbol">⚔️</span>
+      <h1>Warrior Dad Daily</h1>
+    </div>
+    <div class="subtitle">Strength · Presence · Legacy</div>
+    <div class="date-line" id="dateDisplay"></div>
+    <div id="authStatus" style="margin-top:8px;font-size:11px;color:var(--muted);letter-spacing:0.1em"></div>
+  </header>
+
+    <div class="section">
+      <div class="section-label">Today's Code</div>
+      <div class="quote-card">
+        <div id="quoteText"></div>
+        <div class="quote-author" id="quoteAuthor"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Today's Intention</div>
+      <textarea class="intention-box" id="intention" rows="3" placeholder="What kind of man will you be today?"></textarea>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Daily Disciplines</div>
+      <div class="habits-grid" id="habitsGrid"></div>
+      <div class="score-wrap">
+        <div class="score-meta"><span>Discipline Score</span><span id="scoreText">0 / 7</span></div>
+        <div class="bar-bg"><div class="bar-fill" id="scoreBar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Lesson for <span class="son-name">Your Son</span> Today</div>
+      <textarea id="lesson" rows="3" placeholder="What truth will you pass down to him today?"></textarea>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Journal Entry</div>
+      <textarea id="journal" rows="5" placeholder="What's on your mind — victories, struggles, reflections..."></textarea>
+      <div style="margin-top:10px">
+        <div class="form-label">📈 Market Notes (optional)</div>
+        <textarea id="investReflect" rows="2" placeholder="What did you observe in the market today? Patterns, setups, lessons..."></textarea>
+      </div>
+      <button class="btn-sm" style="margin-top:10px;width:100%" onclick="getAIResponse()">Get Warrior Mentor Response ⚔</button>
+      <div class="ai-bubble" id="aiBubble" style="display:none">
+        <div class="ai-label">Mentor Response</div>
+        <div id="aiText"></div>
+      </div>
+    </div>
+
+    <!-- DAILY TASKS -->
+    <div class="section">
+      <div class="section-label">Today's Tasks</div>
+      <div style="display:grid;gap:8px;margin-bottom:10px">
+        <input type="text" id="gd-title" placeholder="Add a task for today...">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div>
+            <div class="form-label">Category</div>
+            <select id="gd-cat">
+              <option>💪 Fitness</option>
+              <option>📖 Reading</option>
+              <option>📈 Investing</option>
+              <option>🧒 Fatherhood</option>
+              <option>🧠 Mindset</option>
+              <option>💰 Money</option>
+              <option>⚙ Other</option>
+            </select>
+          </div>
+          <div>
+            <div class="form-label">Time <span style="font-size:10px;color:var(--muted);font-style:italic;letter-spacing:0">(app must be open)</span></div>
+            <input type="time" id="gd-time">
+          </div>
+        </div>
+        <button class="btn-gold" id="addDailyTaskBtn"><span>ADD TASK ⚔</span></button>
+      </div>
+      <div id="notifStatus" style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:8px;text-align:center"></div>
+      <div id="dailyTasksContainer"><div style="color:var(--muted);font-style:italic;font-size:15px">No tasks yet. What must get done today?</div></div>
+    </div>
+
+    <!-- 5-MINUTE DRIFTER EXERCISE -->
+    <div class="section">
+      <div class="drifter-wrap" id="drifterWrap">
+        <div class="drifter-header">
+          <div class="drifter-header-icon">⚡</div>
+          <div class="drifter-header-text">
+            <div class="drifter-header-title">5-Minute Drifter Exercise</div>
+            <div class="drifter-header-sub">Stop drifting. Start executing.</div>
+          </div>
+          <div class="drifter-timer" id="drifterTimer">5:00</div>
+        </div>
+
+        <div class="drifter-body" id="drifterBody">
+
+          <!-- Step 1: Brain Prompt (AI) -->
+          <div class="drifter-step">
+            <div class="drifter-step-num">Step 1 — Brain Prompt</div>
+            <div class="drifter-prompt" id="drifterPrompt">
+              <div class="drifter-prompt-loading" id="drifterLoading">
+                <div class="drifter-dot"></div><div class="drifter-dot"></div><div class="drifter-dot"></div>
+              </div>
+            </div>
+            <button class="btn-sm" style="width:100%" onclick="loadDrifterPrompt()">↺ New Prompt</button>
+          </div>
+
+          <!-- Step 2: Reflect -->
+          <div class="drifter-step">
+            <div class="drifter-step-num">Step 2 — Reflect (Self)</div>
+            <div style="display:grid;gap:8px">
+              <div class="drifter-check" onclick="toggleDrifterCheck('dc1')">
+                <div class="drifter-checkbox" id="dc1">✓</div>
+                <div class="drifter-check-label">Where am I drifting or avoiding right now?</div>
+              </div>
+              <textarea id="drifterReflect" rows="2" placeholder="Be honest. What are you avoiding?" style="font-size:15px" oninput="if(typeof saveDrifterProgress==='function') saveDrifterProgress({reflect:this.value})"></textarea>
+              <div class="drifter-check" onclick="toggleDrifterCheck('dc2')">
+                <div class="drifter-checkbox" id="dc2">✓</div>
+                <div class="drifter-check-label">I know what's holding me back and I own it.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Non-Negotiable Move -->
+          <div class="drifter-step">
+            <div class="drifter-step-num">Step 3 — Non-Negotiable Move</div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:8px;color:var(--text)">What is your 1 non-negotiable move TODAY?</div>
+            <textarea id="drifterMove" rows="2" placeholder="Be specific. Not 'work harder' — what exactly?" style="font-size:15px" oninput="if(typeof saveDrifterProgress==='function') saveDrifterProgress({move:this.value})"></textarea>
+            <button class="btn-sm" style="width:100%;margin-top:8px" onclick="scheduleDrifterMove()">→ Add to Today's Tasks</button>
+          </div>
+
+          <!-- Step 4: Warrior Status -->
+          <div class="drifter-step">
+            <div class="drifter-step-num">Step 4 — Warrior Status</div>
+            <div class="drifter-warrior-status">
+              <div style="text-align:center">
+                <div class="drifter-streak-num" id="drifterStreakNum">0</div>
+                <div class="drifter-streak-label">Day Streak</div>
+              </div>
+              <div class="drifter-streak-msg" id="drifterStreakMsg">Seal your day to build your streak.</div>
+            </div>
+          </div>
+
+          <button class="btn-gold" onclick="completeDrifter()"><span>⚡ EXECUTE — LOCK IT IN</span></button>
+
+        </div>
+
+        <div class="drifter-complete" id="drifterComplete">
+          <div class="drifter-complete-icon">🔥</div>
+          <div class="drifter-complete-title">Drifter Exercise Complete</div>
+          <div class="drifter-complete-sub" id="drifterCompleteMsg">Your move is locked in. Now go execute.</div>
+          <button class="btn-sm" style="margin-top:12px;width:100%" onclick="resetDrifter()">↺ Run Again</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <button class="btn-gold" onclick="saveDay()">SEAL THE DAY</button>
+    </div>
+    <div class="section" style="padding-top:0">
+      <div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;text-align:center">
+        <button class="btn-sm" style="width:100%;opacity:0.6;font-size:11px" onclick="resetDay()">↺ Reset for New Day — clears all today's entries</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== WISDOM PAGE ===== -->
+  <div class="page" id="page-wisdom">
+
+    <!-- Tab switcher -->
+    <div class="section">
+      <div class="goals-tabs">
+        <button class="goals-tab active" id="ltab-wisdom" onclick="switchLessonTab('wisdom')">📖 Wisdom Library</button>
+        <button class="goals-tab" id="ltab-reading" onclick="switchLessonTab('reading')">📚 Reading Tracker</button>
+      </div>
+    </div>
+
+    <!-- WISDOM LIBRARY -->
+    <div id="lview-wisdom">
+      <div class="section">
+        <div class="section-label">Wisdom Library</div>
+        <div class="lesson-filter" id="lessonFilters"></div>
+        <div id="lessonsContainer"></div>
+      </div>
+      <div class="section">
+        <div class="section-label">Add Your Own</div>
+        <div style="display:grid;gap:8px">
+          <input type="text" id="l-title" placeholder="Lesson title">
+          <textarea id="l-body" rows="3" placeholder="The full lesson or story..."></textarea>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div>
+              <div class="form-label">Category</div>
+              <select id="l-cat">
+                <option>Money</option>
+                <option>Character</option>
+                <option>Resilience</option>
+                <option>Relationships</option>
+                <option>Health</option>
+                <option>Investing</option>
+              </select>
+            </div>
+            <div>
+              <div class="form-label">Best Age to Teach</div>
+              <select id="l-age">
+                <option>Any age</option>
+                <option>5-8</option>
+                <option>9-12</option>
+                <option>13-16</option>
+                <option>17+</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-gold" onclick="addLesson()">Add to Library</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- READING TRACKER -->
+    <div id="lview-reading" style="display:none">
+
+      <!-- Stats -->
+      <div class="section">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px">
+          <div class="mem-stat"><div class="mem-stat-num" id="rt-total">0</div><div class="mem-stat-label">Total Books</div></div>
+          <div class="mem-stat"><div class="mem-stat-num" id="rt-done">0</div><div class="mem-stat-label">Finished</div></div>
+          <div class="mem-stat"><div class="mem-stat-num" id="rt-reading">0</div><div class="mem-stat-label">Reading Now</div></div>
+        </div>
+      </div>
+
+      <!-- Add Book -->
+      <div class="section">
+        <div class="section-label">Add a Book</div>
+        <div style="display:grid;gap:8px">
+          <input type="text" id="rb-title" placeholder="Book title">
+          <input type="text" id="rb-author" placeholder="Author">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div>
+              <div class="form-label">Category</div>
+              <select id="rb-cat">
+                <option>📈 Finance</option>
+                <option>🧠 Mindset</option>
+                <option>⚔ Discipline</option>
+                <option>🧒 Fatherhood</option>
+                <option>📖 Biography</option>
+                <option>💡 Business</option>
+                <option>🌍 History</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <div class="form-label">Status</div>
+              <select id="rb-status">
+                <option value="reading">Currently Reading</option>
+                <option value="done">Finished</option>
+                <option value="next">Up Next</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <div class="form-label">Key Takeaway / Why you picked it</div>
+            <textarea id="rb-takeaway" rows="3" placeholder="What are you hoping to learn or what hit you hardest?"></textarea>
+          </div>
+          <div>
+            <div class="form-label">Rating (once finished)</div>
+            <select id="rb-rating">
+              <option value="">Not rated yet</option>
+              <option value="5">⭐⭐⭐⭐⭐ Must read</option>
+              <option value="4">⭐⭐⭐⭐ Really good</option>
+              <option value="3">⭐⭐⭐ Solid</option>
+              <option value="2">⭐⭐ Decent</option>
+              <option value="1">⭐ Skip it</option>
+            </select>
+          </div>
+          <button class="btn-gold" onclick="addBook()"><span>ADD TO LIBRARY 📚</span></button>
+        </div>
+      </div>
+
+      <!-- Book List -->
+      <div class="section">
+        <div class="section-label">Your Library</div>
+        <div class="lesson-filter" id="bookFilters"></div>
+        <div id="bookList"><div style="color:var(--muted);font-style:italic;font-size:15px">No books tracked yet. What are you reading?</div></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ===== MISSION PAGE ===== -->
+  <div class="page" id="page-mission">
+
+    <div class="section">
+      <div style="background:linear-gradient(135deg,rgba(201,168,76,0.06),transparent);border:1px solid rgba(201,168,76,0.2);border-left:4px solid var(--gold);border-radius:3px;padding:18px 20px;text-align:center">
+        <div style="font-family:'Cinzel',serif;font-size:clamp(16px,4vw,20px);font-weight:900;letter-spacing:0.15em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px">Mission Control</div>
+        <div style="font-size:14px;font-style:italic;color:rgba(240,224,208,0.5);line-height:1.6">What are you building over time?</div>
+      </div>
+    </div>
+
+    <!-- Tab switcher -->
+    <div class="section">
+      <div class="goals-tabs" style="grid-template-columns:1fr 1fr 1fr 1fr">
+        <button class="goals-tab active" id="mtab-weekly" onclick="switchMissionTab('weekly')">📆 Weekly</button>
+        <button class="goals-tab" id="mtab-monthly" onclick="switchMissionTab('monthly')">🗓 Monthly</button>
+        <button class="goals-tab" id="mtab-mantra" onclick="switchMissionTab('mantra')">🗣 Mantra</button>
+        <button class="goals-tab" id="mtab-reading" onclick="switchMissionTab('reading')">📖 Reading</button>
+      </div>
+    </div>
+
+    <!-- WEEKLY MISSIONS -->
+    <div id="mview-weekly">
+      <div class="section">
+        <div style="background:linear-gradient(135deg,rgba(232,98,26,0.06),transparent);border:1px solid rgba(232,98,26,0.15);border-left:3px solid var(--orange);border-radius:3px;padding:14px 16px;margin-bottom:4px">
+          <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin-bottom:4px">Weekly Scoreboard</div>
+          <div style="font-size:14px;color:rgba(240,224,208,0.5);font-style:italic">Set a target. Track your totals. Win the week.</div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-label">Add Mission</div>
+        <div style="display:grid;gap:8px">
+          <input type="text" id="gw-title" placeholder="e.g. Workouts completed, Pages read...">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div><div class="form-label">Category</div>
+            <select id="gw-cat">
+              <option>💪 Fitness</option><option>📖 Reading</option><option>📈 Investing</option>
+              <option>🧒 Fatherhood</option><option>🧠 Mindset</option><option>💰 Money</option>
+            </select></div>
+            <div><div class="form-label">Unit</div><input type="text" id="gw-unit" placeholder="workouts / pages / $"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div><div class="form-label">Target #</div><input type="number" id="gw-target" placeholder="4" min="1"></div>
+            <div><div class="form-label">Starting At</div><input type="number" id="gw-progress" placeholder="0" min="0"></div>
+          </div>
+          <div><div class="form-label">Why this matters</div><input type="text" id="gw-why" placeholder="Optional reason"></div>
+          <button class="btn-gold" onclick="addWeeklyGoal()"><span>SET MISSION ⚔</span></button>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-label">This Week's Scoreboard</div>
+        <div id="weeklyGoalsContainer"><div style="color:var(--muted);font-style:italic;font-size:15px">No missions set. What will you conquer this week?</div></div>
+      </div>
+    </div>
+
+    <!-- MONTHLY OUTCOMES -->
+    <div id="mview-monthly" style="display:none">
+      <div class="section">
+        <div style="background:linear-gradient(135deg,rgba(160,96,255,0.06),transparent);border:1px solid rgba(160,96,255,0.15);border-left:3px solid #a060ff;border-radius:3px;padding:14px 16px;margin-bottom:4px">
+          <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#a060ff;margin-bottom:4px">Identity Outcomes</div>
+          <div style="font-size:14px;color:rgba(240,224,208,0.5);font-style:italic">Who will you become by the end of this month?</div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-label">Add Outcome</div>
+        <div style="display:grid;gap:8px">
+          <input type="text" id="gm-title" placeholder="e.g. Finish 1 book, Invest $300...">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div><div class="form-label">Category</div>
+            <select id="gm-cat">
+              <option>💪 Fitness</option><option>📖 Reading</option><option>📈 Investing</option>
+              <option>🧒 Fatherhood</option><option>🧠 Mindset</option><option>💰 Money</option>
+            </select></div>
+            <div><div class="form-label">Target</div><input type="text" id="gm-target" placeholder="e.g. 1 book, $300"></div>
+          </div>
+          <div><div class="form-label">The man you are becoming does this because...</div>
+          <textarea id="gm-why" rows="2" placeholder="Your deep reason..."></textarea></div>
+          <button class="btn-gold" onclick="addMonthlyGoal()"><span>COMMIT TO THIS ⚔</span></button>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-label">This Month's Outcomes</div>
+        <div id="monthlyGoalsContainer"><div style="color:var(--muted);font-style:italic;font-size:15px">No outcomes set. Who are you becoming this month?</div></div>
+      </div>
+    </div>
+
+    <!-- MANTRA -->
+    <div id="mview-mantra" style="display:none">
+      <div class="section">
+        <div style="background:linear-gradient(135deg,rgba(201,168,76,0.04),rgba(232,98,26,0.03));border:1px solid rgba(201,168,76,0.15);border-left:3px solid var(--gold);border-radius:3px;padding:14px 16px;margin-bottom:10px">
+          <div style="font-size:11px;font-family:'Cinzel',serif;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Your Word</div>
+          <div style="font-size:14px;color:rgba(201,168,76,0.6);font-style:italic;line-height:1.5">Speak it. Own it. Become it.</div>
+        </div>
+        <textarea id="mantra" rows="3" placeholder="e.g. I am disciplined. I show up. I build legacy every day."></textarea>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+          <input type="checkbox" id="mantraCheck" style="width:18px;height:18px;accent-color:var(--gold);cursor:pointer;flex-shrink:0">
+          <label for="mantraCheck" style="font-size:14px;color:var(--muted);cursor:pointer">I said my mantra out loud today</label>
+        </div>
+        <button class="btn-gold" style="margin-top:12px" onclick="saveMantra()"><span>SAVE MANTRA ⚔</span></button>
+      </div>
+    </div>
+
+    <!-- READING REFLECTION -->
+    <div id="mview-reading" style="display:none">
+      <div class="section">
+        <div style="background:linear-gradient(135deg,rgba(39,174,96,0.04),transparent);border:1px solid rgba(39,174,96,0.12);border-left:3px solid var(--green-bright);border-radius:3px;padding:14px 16px;margin-bottom:10px">
+          <div style="font-size:11px;font-family:'Cinzel',serif;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Today's Reading</div>
+          <div style="font-size:14px;color:rgba(39,174,96,0.6);font-style:italic;line-height:1.5">Knowledge is the one asset no one can take from you.</div>
+        </div>
+        <textarea id="readingReflect" rows="4" placeholder="What did you read and what did it teach you today?" oninput="if(typeof saveDrifterProgress==='function') {}"></textarea>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+          <input type="checkbox" id="readingCheck" style="width:18px;height:18px;accent-color:var(--green-bright);cursor:pointer;flex-shrink:0">
+          <label for="readingCheck" style="font-size:14px;color:var(--muted);cursor:pointer">I read today</label>
+        </div>
+        <button class="btn-gold" style="margin-top:12px" onclick="saveReadingReflect()"><span>SAVE REFLECTION ⚔</span></button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== PROGRESS PAGE ===== -->
+  <div class="page" id="page-progress">
+
+    <!-- WARRIOR DAD SCORE -->
+    <div class="section">
+      <div id="wdScoreCard" style="
+        background:linear-gradient(160deg,#0a0800,#181200,#0a0800);
+        border:1px solid rgba(240,192,64,0.25);border-radius:6px;
+        padding:24px;text-align:center;margin-bottom:4px;position:relative;overflow:hidden
+      ">
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(240,192,64,0.08),transparent 70%);pointer-events:none"></div>
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(240,192,64,0.6);margin-bottom:12px">Warrior Dad Score</div>
+        <div id="wds-number" style="font-family:'Cinzel',serif;font-size:72px;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--gold),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">—</div>
+        <div id="wds-label" style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:6px">Start tracking to see your score</div>
+        <div id="wds-verdict" style="font-size:15px;font-style:italic;color:#a09080;margin-top:10px;line-height:1.6"></div>
+        <div style="margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px" id="wds-breakdown"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">This Week's Report</div>
+      <div class="report-grid" id="reportStats"></div>
+      <div style="margin-top:4px">
+        <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">7-Day Discipline Streak</div>
+        <div class="streak-row" id="streakRow"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">Top Habits This Week</div>
+      <div id="habitReport"></div>
+    </div>
+    <div class="section">
+      <div class="section-label">Lessons Taught This Week</div>
+      <div id="lessonReport"></div>
+    </div>
+    <div class="section">
+      <div class="section-label">The Record — Past Days</div>
+      <div id="logContainer"><div style="color:var(--muted);font-style:italic;font-size:15px">No days sealed yet. Begin.</div></div>
+    </div>
+  </div>
+
+  <!-- ===== FACE THE FEAR ===== -->
+  <div class="page" id="page-legacy">
+
+    <div class="section">
+      <div class="fear-hero">
+        <div class="fear-hero-title">🔱 Legacy</div>
+        <div class="fear-hero-sub">"A man who has not prepared his children for his own death has failed as a father."<br>— Marcus Aurelius</div>
+      </div>
+    </div>
+
+    <!-- FEAR VAULT -->
+    <div class="section">
+      <div class="section-label">Fear Vault</div>
+      <div style="display:grid;gap:8px;margin-bottom:12px">
+        <div><div class="form-label">Name the Fear</div><input type="text" id="f-name" placeholder="e.g. Fear of not leaving my son anything"></div>
+        <div><div class="form-label">How is this fear hurting your life today?</div><textarea id="f-cost" rows="2" placeholder="Be brutally honest..."></textarea></div>
+        <div><div class="form-label">One action you can take THIS WEEK</div><textarea id="f-action" rows="2" placeholder="What is one step forward?"></textarea></div>
+      </div>
+      <button class="btn-gold" onclick="addFear()"><span>CONFRONT IT ⚔</span></button>
+      <div style="margin-top:14px" id="fearList"><div style="color:var(--muted);font-style:italic;font-size:15px">No fears confronted yet. Name them — it takes away their power.</div></div>
+    </div>
+
+    <!-- LEGACY SCOREBOARD -->
+    <div class="section">
+      <div class="section-label">Legacy Scoreboard</div>
+      <div style="display:grid;gap:10px;margin-bottom:14px">
+        <div class="legacy-bar-wrap">
+          <div class="legacy-bar-label"><span>💰 Inheritance Building</span><span id="lv-inherit-pct">0%</span></div>
+          <div class="bar-bg"><div class="bar-fill" id="lv-inherit-bar" style="width:0%"></div></div>
+          <div style="display:flex;gap:8px;margin-top:6px;align-items:center">
+            <input type="number" id="lv-inherit-val" placeholder="$ saved/invested so far" style="flex:1">
+            <input type="number" id="lv-inherit-goal" placeholder="$ goal" style="flex:1">
+            <button class="btn-sm" onclick="updateLegacy('inherit')">Set</button>
+          </div>
+        </div>
+        <div class="legacy-bar-wrap">
+          <div class="legacy-bar-label"><span>📖 Knowledge Passed This Month</span><span id="lv-knowledge-pct">0%</span></div>
+          <div class="bar-bg"><div class="bar-fill" id="lv-knowledge-bar" style="width:0%"></div></div>
+          <div style="display:flex;gap:8px;margin-top:6px;align-items:center">
+            <input type="number" id="lv-knowledge-val" placeholder="Lessons taught" style="flex:1">
+            <input type="number" id="lv-knowledge-goal" placeholder="Monthly goal" style="flex:1">
+            <button class="btn-sm" onclick="updateLegacy('knowledge')">Set</button>
+          </div>
+        </div>
+        <div class="legacy-bar-wrap">
+          <div class="legacy-bar-label"><span>🏋️ Physical Standard</span><span id="lv-fitness-pct">0%</span></div>
+          <div class="bar-bg"><div class="bar-fill" id="lv-fitness-bar" style="width:0%"></div></div>
+          <div style="display:flex;gap:8px;margin-top:6px;align-items:center">
+            <input type="number" id="lv-fitness-val" placeholder="Workouts this month" style="flex:1">
+            <input type="number" id="lv-fitness-goal" placeholder="Monthly goal" style="flex:1">
+            <button class="btn-sm" onclick="updateLegacy('fitness')">Set</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE MIRROR CHECK -->
+    <div class="section">
+      <div class="section-label">The Mirror Check</div>
+      <div id="mirrorForm">
+        <div class="mirror-card">
+          <div class="mirror-q-num">Question 1 of 5</div>
+          <div class="mirror-q">Are you physically stronger and healthier than you were 90 days ago?</div>
+          <select id="mq1"><option value="">Choose honestly...</option><option value="3">Yes, significantly</option><option value="2">Somewhat yes</option><option value="1">About the same</option><option value="0">No, I've slipped</option></select>
+        </div>
+        <div class="mirror-card">
+          <div class="mirror-q-num">Question 2 of 5</div>
+          <div class="mirror-q">Have you taken real steps toward building wealth and securing your family's future?</div>
+          <select id="mq2"><option value="">Choose honestly...</option><option value="3">Yes, consistently</option><option value="2">Some steps</option><option value="1">Thinking about it</option><option value="0">No action taken</option></select>
+        </div>
+        <div class="mirror-card">
+          <div class="mirror-q-num">Question 3 of 5</div>
+          <div class="mirror-q">Are you more present and intentional with your son than you were 90 days ago?</div>
+          <select id="mq3"><option value="">Choose honestly...</option><option value="3">Yes, much more</option><option value="2">Getting better</option><option value="1">About the same</option><option value="0">I've been absent</option></select>
+        </div>
+        <div class="mirror-card">
+          <div class="mirror-q-num">Question 4 of 5</div>
+          <div class="mirror-q">Are you facing your fears and taking uncomfortable action, or still avoiding them?</div>
+          <select id="mq4"><option value="">Choose honestly...</option><option value="3">Facing them head on</option><option value="2">Making progress</option><option value="1">Still hesitating</option><option value="0">Still avoiding</option></select>
+        </div>
+        <div class="mirror-card">
+          <div class="mirror-q-num">Question 5 of 5</div>
+          <div class="mirror-q">If your son watched how you lived this past 90 days, would he be proud of the man he saw?</div>
+          <select id="mq5"><option value="">Choose honestly...</option><option value="3">Without a doubt</option><option value="2">Mostly yes</option><option value="1">Not fully</option><option value="0">No — I need to change</option></select>
+        </div>
+        <button class="btn-gold" style="margin-top:4px" onclick="submitMirror()"><span>FACE THE MIRROR ⚔</span></button>
+      </div>
+      <div id="mirrorResult" style="display:none"></div>
+      <div style="margin-top:16px" id="mirrorHistory"></div>
+    </div>
+
+    <!-- LEGACY LETTER VAULT -->
+    <div class="section">
+      <div style="background:linear-gradient(135deg,#080010,#100820);border:1px solid rgba(160,96,255,0.25);border-left:4px solid #a060ff;border-radius:3px;padding:18px;margin-bottom:16px;text-align:center">
+        <div style="font-family:'Cinzel',serif;font-size:clamp(15px,4vw,20px);font-weight:900;letter-spacing:0.12em;text-transform:uppercase;background:linear-gradient(135deg,#c090ff,#6030c0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px">📜 Legacy Letter Vault</div>
+        <div style="font-size:14px;font-style:italic;color:rgba(200,180,240,0.5);line-height:1.6">Words he will carry long after you are gone. Write them now.</div>
+      </div>
+
+      <div style="display:grid;gap:8px;margin-bottom:12px">
+        <div>
+          <div class="form-label">Letter Title</div>
+          <input type="text" id="ll-title" placeholder='e.g. "Open when you become a father"'>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div>
+            <div class="form-label">Type</div>
+            <select id="ll-type" onchange="if(typeof toggleLetterType==='function') toggleLetterType()">
+              <option value="age">By Age</option>
+              <option value="milestone">By Milestone</option>
+            </select>
+          </div>
+          <div id="ll-age-wrap">
+            <div class="form-label">Open at Age</div>
+            <select id="ll-age">
+              <option>13</option><option>16</option><option>18</option>
+              <option>21</option><option>25</option><option>30</option><option>40</option>
+            </select>
+          </div>
+          <div id="ll-milestone-wrap" style="display:none">
+            <div class="form-label">Milestone</div>
+            <select id="ll-milestone">
+              <option>First Heartbreak</option>
+              <option>High School Graduation</option>
+              <option>College Graduation</option>
+              <option>First Job</option>
+              <option>First Investment</option>
+              <option>Getting Married</option>
+              <option>Becoming a Father</option>
+              <option>Hardest Day of Your Life</option>
+              <option>When You Doubt Yourself</option>
+              <option>My Death</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <div class="form-label">Your Letter</div>
+          <textarea id="ll-body" rows="6" placeholder="Write from your heart. No one else will read this..."></textarea>
+        </div>
+        <button class="btn-gold" onclick="saveLetter()"><span>SEAL THIS LETTER 📜</span></button>
+      </div>
+      <div id="letterVault"><div style="color:var(--muted);font-style:italic;font-size:15px">No letters written yet. Start with one truth you want him to carry forever.</div></div>
+    </div>
+
+  </div>
+
+
+</div>
+
+<!-- AUTH MODAL -->
+<div class="auth-modal-overlay" id="authModal">
+  <div class="auth-modal">
+    <div class="auth-modal-title">⚔ Warrior Dad Daily</div>
+    <div class="auth-modal-sub">Sign in to sync your data across devices and keep your legacy safe.</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')">Sign In</button>
+      <button class="auth-tab" id="authTabRegister" onclick="switchAuthTab('register')">Create Account</button>
+    </div>
+    <div style="display:grid;gap:8px">
+      <div><div class="form-label">Email</div><input type="email" id="authEmail" placeholder="your@email.com" style="font-size:16px"></div>
+      <div><div class="form-label">Password</div><input type="password" id="authPassword" placeholder="Min 8 characters" style="font-size:16px"></div>
+      <div id="authSonNameWrap" style="display:none"><div class="form-label">Your Son's Name</div><input type="text" id="authSonName" placeholder="His name..." style="font-size:16px"></div>
+    </div>
+    <div class="auth-error" id="authError"></div>
+    <button class="btn-gold" style="margin-top:14px" id="authSubmitBtn" onclick="submitAuth()"><span id="authSubmitLabel">SIGN IN ⚔</span></button>
+    <div class="auth-skip" onclick="skipAuth()">Continue without account (local only)</div>
+  </div>
+</div>
+
+<!-- SETUP MODAL -->
+<div id="setupModal" style="
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.96);
+  display:none;align-items:center;justify-content:center;
+  padding:24px;
+">
+  <div style="
+    background:linear-gradient(160deg,#0d0800,#1a1000,#0d0800);
+    border:1px solid rgba(240,192,64,0.3);
+    border-radius:6px;padding:36px 28px;
+    max-width:360px;width:100%;text-align:center;
+  ">
+    <div style="font-size:48px;margin-bottom:16px">⚔</div>
+    <div style="font-family:'Cinzel',serif;font-size:22px;font-weight:900;
+      letter-spacing:0.12em;text-transform:uppercase;
+      background:linear-gradient(135deg,var(--gold),var(--orange));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      background-clip:text;margin-bottom:10px">
+      Warrior Dad Daily
+    </div>
+    <div style="font-size:16px;font-style:italic;color:rgba(240,224,208,0.6);
+      line-height:1.7;margin-bottom:28px">
+      Before we begin — what is your son's name?
+    </div>
+    <input type="text" id="setupSonName" placeholder="His name..."
+      style="text-align:center;font-size:20px;font-family:'Cinzel',serif;
+      letter-spacing:0.1em;margin-bottom:16px"
+      onkeydown="if(event.key==='Enter' && typeof finishSetup==='function') finishSetup()">
+    <button class="btn-gold" style="width:100%" id="beginJourneyBtn" onclick="finishSetup()">
+      <span>BEGIN THE JOURNEY ⚔</span>
+    </button>
+    <div style="font-size:12px;color:var(--muted);margin-top:14px;font-style:italic">
+      You can change this anytime in settings
+    </div>
+  </div>
+</div>
+
+<!-- SEAL CEREMONY OVERLAY -->
+<div id="sealCeremony">
+  <div class="seal-icon">⚔</div>
+  <div class="seal-title">Day Sealed</div>
+  <div class="seal-sub" id="sealCeremonyMsg">Another brick in the legacy.</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ API CONFIG ============
+// Set this to your Railway server URL once deployed
+// While developing locally: 'http://localhost:3000'
+var API_BASE = '';  // e.g. 'https://warrior-dad-production.up.railway.app'
+
+// Auth state — stored in memory, token persisted in localStorage
+var AUTH = {
+  token: localStorage.getItem('wdAuthToken') || null,
+  userId: null,
+  email: null,
+  sonName: null,
+  isOnline: false
+};
+
+function isBackendEnabled() {
+  return API_BASE && API_BASE.length > 0;
+}
+
+function getAuthHeader() {
+  return AUTH.token ? { 'Authorization': 'Bearer ' + AUTH.token } : {};
+}
+
+async function apiCall(method, path, body) {
+  if (!isBackendEnabled()) return null;
+  try {
+    var opts = {
+      method: method,
+      headers: Object.assign({ 'Content-Type': 'application/json' }, getAuthHeader())
+    };
+    if (body) opts.body = JSON.stringify(body);
+    var res = await fetch(API_BASE + path, opts);
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'API error ' + res.status);
+    return data;
+  } catch(e) {
+    console.warn('API call failed:', path, e.message);
+    return null;
+  }
+}
+
+// ============ DATE HELPER ============
+// Uses local time, not UTC — avoids wrong-day bugs around midnight
+function getLocalDateKey() {
+  var d = new Date();
+  var yyyy = d.getFullYear();
+  var mm = String(d.getMonth() + 1).padStart(2, '0');
+  var dd = String(d.getDate()).padStart(2, '0');
+  return yyyy + '-' + mm + '-' + dd;
+}
+
+// ============ INDEXEDDB FOR MEMORIES ============
+var _memDB = null;
+
+function openMemDB() {
+  return new Promise(function(resolve, reject) {
+    if(_memDB) { resolve(_memDB); return; }
+    var req = indexedDB.open('WarriorDadMemories', 1);
+    req.onupgradeneeded = function(e) {
+      var db = e.target.result;
+      if(!db.objectStoreNames.contains('photos')) {
+        db.createObjectStore('photos', { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = function(e) { _memDB = e.target.result; resolve(_memDB); };
+    req.onerror = function() { reject(req.error); };
+  });
+}
+
+function savePhotoIDB(id, dataUrl) {
+  return openMemDB().then(function(db) {
+    return new Promise(function(resolve, reject) {
+      var tx = db.transaction('photos', 'readwrite');
+      tx.objectStore('photos').put({ id: id, data: dataUrl });
+      tx.oncomplete = resolve;
+      tx.onerror = function() { reject(tx.error); };
+    });
+  });
+}
+
+function getPhotoIDB(id) {
+  return openMemDB().then(function(db) {
+    return new Promise(function(resolve, reject) {
+      var tx = db.transaction('photos', 'readonly');
+      var req = tx.objectStore('photos').get(id);
+      req.onsuccess = function() { resolve(req.result ? req.result.data : null); };
+      req.onerror = function() { reject(req.error); };
+    });
+  });
+}
+
+function deletePhotoIDB(id) {
+  return openMemDB().then(function(db) {
+    return new Promise(function(resolve, reject) {
+      var tx = db.transaction('photos', 'readwrite');
+      tx.objectStore('photos').delete(id);
+      tx.oncomplete = resolve;
+      tx.onerror = function() { reject(tx.error); };
+    });
+  });
+}
+
+// ============ MEMORY TAGS (declared early) ============
+var MEM_TAGS = [
+  {id:'workout', label:'💪 Solo Workout'},
+  {id:'investing', label:'📈 Investing Win'},
+  {id:'reading', label:'📖 Reading'},
+  {id:'son', label:'🧒 With My Son'},
+  {id:'milestone', label:'🏆 Milestone'},
+  {id:'sports', label:'🥊 Sports Together'},
+  {id:'morning', label:'🌅 Early Morning'},
+  {id:'money', label:'💰 Money Move'},
+];
+var activeMemTag = null;
+var activeMemFilter = 'All';
+var pendingMemData = null;
+
+// ============ SETUP & SON NAME ============
+function checkFirstOpen() {
+  var sonName = localStorage.getItem('wdSonName');
+
+  // If backend is configured and user not logged in, show auth modal first
+  if (isBackendEnabled() && !AUTH.token) {
+    showAuthModal();
+    updateAuthStatusBar();
+    if (sonName) applySonName(sonName);
+    return;
+  }
+
+  updateAuthStatusBar();
+
+  var modal = document.getElementById('setupModal');
+  if (!modal) return;
+  if (sonName) {
+    modal.style.display = 'none';
+    applySonName(sonName);
+  } else {
+    modal.style.display = 'flex';
+  }
+}
+
+function finishSetup() {
+  var name = document.getElementById('setupSonName').value.trim();
+  if(!name) { document.getElementById('setupSonName').style.borderColor='var(--red-bright)'; return; }
+  localStorage.setItem('wdSonName', name);
+  document.getElementById('setupModal').style.display = 'none';
+  applySonName(name);
+  showToast('Welcome, warrior. Let\'s build his legacy. ⚔');
+}
+
+function getSonName() {
+  return localStorage.getItem('wdSonName') || 'your son';
+}
+
+function applySonName(name) {
+  var lessonEl = document.getElementById('lesson');
+  if(lessonEl) lessonEl.placeholder = 'What truth will you pass down to ' + name + ' today?';
+  var intentionEl = document.getElementById('intention');
+  if(intentionEl) intentionEl.placeholder = 'What kind of man will you be for ' + name + ' today?';
+  var drifterReflect = document.getElementById('drifterReflect');
+  if(drifterReflect) drifterReflect.placeholder = 'Be honest. What are you avoiding that affects ' + name + '?';
+  var memSub = document.querySelector('#page-vault .hero-banner-sub, #page-vault [style*="Every rep"]');
+  // Update all .son-name spans
+  document.querySelectorAll('.son-name').forEach(function(el) {
+    el.textContent = name;
+  });
+  // Update mirror check questions
+  var mq3 = document.querySelector('#mq3');
+  var mq5 = document.querySelector('#mq5');
+  // Update memory vault subtitle
+  var memVaultSub = document.querySelector('#page-vault .section div[style*="Every rep"]');
+  if(memVaultSub) memVaultSub.textContent = 'Every rep. Every win. Every moment with ' + name + '. Captured forever.';
+}
+
+// ============ AUTO-RESET DAILY TASKS ============
+function checkDailyTaskReset() {
+  var lastReset = localStorage.getItem('wdTaskResetDate');
+  var today = getLocalDateKey();
+  if(lastReset !== today) {
+    var tasks = getData('wdDailyTasks', []);
+    var hadDone = tasks.some(function(t){ return t.done; });
+    tasks.forEach(function(t){ t.done = false; });
+    setData('wdDailyTasks', tasks);
+    localStorage.setItem('wdTaskResetDate', today);
+    if(hadDone) showToast('New day. Tasks reset. Get after it. ⚔');
+  }
+  // Schedule next reset at midnight
+  var now = new Date();
+  var midnight = new Date();
+  midnight.setHours(24, 0, 0, 0);
+  var msUntilMidnight = midnight - now;
+  setTimeout(function() {
+    checkDailyTaskReset();
+  }, msUntilMidnight);
+}
+
+// ============ DATA ============
+var HABITS = [
+  {id:'workout',icon:'🏋️',name:'Worked Out'},
+  {id:'read',icon:'📖',name:'Read Today'},
+  {id:'invest',icon:'📈',name:'Reviewed Investments'},
+  {id:'present',icon:'🧒',name:'Present with Son'},
+  {id:'meditate',icon:'🧘',name:'Calm Mind'},
+  {id:'noscroll',icon:'📵',name:'No Mindless Scroll'},
+  {id:'learn',icon:'🧠',name:'Learned Something'},
+];
+
+var BUILT_IN_LESSONS = [
+  {id:'bl1',title:'Money works for you, not the other way around',body:'The goal isn\'t to work hard forever. It\'s to build assets that generate income while you sleep. Every dollar saved is a soldier working for your future.',cat:'Money',age:'9-12',builtin:true},
+  {id:'bl2',title:'Compound interest is the eighth wonder of the world',body:'$100 invested at 10% becomes $110. Then $121. Then $133. Then $146. You never touch it, it just grows. Time is your greatest asset — start early.',cat:'Investing',age:'13-16',builtin:true},
+  {id:'bl3',title:'Emotions are data, not commands',body:'Anger, fear, sadness — they tell you something. But you don\'t have to obey them. Pause. Breathe. Then choose how to respond. That pause is where your power lives.',cat:'Character',age:'9-12',builtin:true},
+  {id:'bl4',title:'The man in the mirror is your real competition',body:'Don\'t measure yourself against others. Measure yourself against who you were yesterday. One percent better every day is 37x better by year\'s end.',cat:'Resilience',age:'13-16',builtin:true},
+  {id:'bl5',title:'Your body is your first business',body:'If you don\'t maintain it, everything else suffers. Sleep, eat real food, move daily. It\'s not vanity — it\'s strategy.',cat:'Health',age:'9-12',builtin:true},
+  {id:'bl6',title:'The stock market is a wealth transfer machine',body:'Money flows from the impatient to the patient. Panic sellers give their shares to calm buyers at discounts. Volatility is the price of entry for long-term gains.',cat:'Investing',age:'17+',builtin:true},
+  {id:'bl7',title:'Choose who you spend time with wisely',body:'You become the average of the five people you\'re around most. Not because they\'re bad — but because behavior is contagious. Guard your time and your circle.',cat:'Relationships',age:'13-16',builtin:true},
+  {id:'bl8',title:'Discomfort is the currency of growth',body:'Every hard thing you do on purpose makes the hard things that happen to you easier to handle. Cold showers, hard conversations, difficult books — seek the resistance.',cat:'Resilience',age:'Any age',builtin:true},
+];
+
+var QUOTES=[
+  // ERIC THOMAS
+  {text:'When you want to succeed as bad as you want to breathe, then you\'ll be successful.',author:'Eric Thomas'},
+  {text:'Pain is temporary. It may last a minute, an hour, a day, or a year. But eventually it subsides. If you quit, it lasts forever.',author:'Eric Thomas'},
+  {text:'You can\'t cheat the grind. It knows how much you\'ve invested. It won\'t give you anything you haven\'t worked for.',author:'Eric Thomas'},
+  // DAVID GOGGINS
+  {text:'You are in danger of living a life so comfortable and soft that you will die without ever realizing your true potential.',author:'David Goggins'},
+  {text:'The most important conversation you\'ll ever have is the one you have with yourself.',author:'David Goggins'},
+  {text:'No one is coming to save you. No one is coming to push you. It\'s on you.',author:'David Goggins'},
+  {text:'Suffering is the true test of life. Don\'t run from it — embrace it.',author:'David Goggins'},
+  // MARCUS AURELIUS
+  {text:'A man who has not prepared his children for his own death has failed as a father.',author:'Marcus Aurelius'},
+  {text:'Waste no more time arguing about what a good man should be. Be one.',author:'Marcus Aurelius'},
+  {text:'You have power over your mind, not outside events. Realize this and you will find strength.',author:'Marcus Aurelius'},
+  {text:'The impediment to action advances action. What stands in the way becomes the way.',author:'Marcus Aurelius'},
+  // MIKE TYSON
+  {text:'Everyone has a plan until they get punched in the mouth.',author:'Mike Tyson'},
+  {text:'Discipline is doing what you hate to do but doing it like you love it.',author:'Mike Tyson'},
+  {text:'I\'m a dreamer. I have to dream and reach for the stars. If I miss a star I grab a handful of clouds.',author:'Mike Tyson'},
+  // KOBE BRYANT
+  {text:'Everything negative — pressure, challenges — is all an opportunity for me to rise.',author:'Kobe Bryant'},
+  {text:'I have nothing in common with lazy people who blame others for their lack of success.',author:'Kobe Bryant'},
+  {text:'If you\'re afraid to fail, then you\'re probably going to fail.',author:'Kobe Bryant'},
+  {text:'The most important thing is to try and inspire people so that they can be great at whatever they want to do.',author:'Kobe Bryant'},
+  // MICHAEL JORDAN
+  {text:'I\'ve missed more than 9,000 shots in my career. I\'ve failed over and over again. That is why I succeed.',author:'Michael Jordan'},
+  {text:'Obstacles don\'t have to stop you. If you run into a wall, figure out how to climb it.',author:'Michael Jordan'},
+  {text:'Talent wins games, but teamwork and intelligence win championships.',author:'Michael Jordan'},
+  // RAY LEWIS
+  {text:'Effort is between you and you. Pain is love.',author:'Ray Lewis'},
+  {text:'Tomorrow is not promised to anyone. Today is all you have.',author:'Ray Lewis'},
+  {text:'A lion doesn\'t concern himself with the opinions of sheep.',author:'Ray Lewis'},
+  // JORDAN PETERSON
+  {text:'Compare yourself to who you were yesterday, not to who someone else is today.',author:'Jordan Peterson'},
+  {text:'You must determine where you are going in your life, because you cannot get there unless you move in that direction.',author:'Jordan Peterson'},
+  {text:'The purpose of life is finding the largest burden that you can bear and bearing it.',author:'Jordan Peterson'},
+  // MIYAMOTO MUSASHI
+  {text:'Today is victory over yourself of yesterday; tomorrow is your victory over lesser men.',author:'Miyamoto Musashi'},
+  {text:'Do nothing that is of no use.',author:'Miyamoto Musashi'},
+  {text:'In battle, if you make your opponent flinch, you have already won.',author:'Miyamoto Musashi'},
+  {text:'Perceive that which cannot be seen with the eye.',author:'Miyamoto Musashi'},
+  {text:'You must understand that there is more than one path to the top of the mountain.',author:'Miyamoto Musashi'},
+  // BRUCE LEE
+  {text:'Do not pray for an easy life. Pray for strength to endure a difficult one.',author:'Bruce Lee'},
+  {text:'Absorb what is useful, discard what is useless, and add what is specifically your own.',author:'Bruce Lee'},
+  {text:'Be like water. Empty your mind. If you put water into a cup, it becomes the cup.',author:'Bruce Lee'},
+  {text:'A wise man can learn more from a foolish question than a fool can learn from a wise answer.',author:'Bruce Lee'},
+  // SUN TZU
+  {text:'Victorious warriors win first and then go to war. Defeated warriors go to war first and then seek to win.',author:'Sun Tzu'},
+  {text:'Know yourself and know your enemy. You will not be imperiled in a hundred battles.',author:'Sun Tzu'},
+  {text:'The greatest victory is that which requires no battle.',author:'Sun Tzu'},
+  {text:'Supreme excellence consists of breaking the enemy\'s resistance without fighting.',author:'Sun Tzu'},
+  // LEONIDAS
+  {text:'Come back with your shield — or on it.',author:'Leonidas of Sparta'},
+  {text:'Spartans do not ask how many enemies there are, only where they are.',author:'Leonidas of Sparta'},
+  {text:'A king does not abandon his post. He holds the line so others may live.',author:'Leonidas of Sparta'},
+  // JOCKO WILLINK
+  {text:'Discipline equals freedom.',author:'Jocko Willink'},
+  {text:'Don\'t wait for motivation. Motivation is fleeting. Discipline is reliable.',author:'Jocko Willink'},
+  {text:'The enemy is not impressed by your thoughts. Only your actions matter.',author:'Jocko Willink'},
+  {text:'If you want to be tougher mentally, it is simple: be tougher. Don\'t meditate on it.',author:'Jocko Willink'},
+  {text:'Leadership is not about being in charge. It is about taking care of those in your charge.',author:'Jocko Willink'},
+  {text:'There is no shortcut. There is no hack. There is only the work.',author:'Jocko Willink'},
+  {text:'Wake up early. Get after it. Every single day.',author:'Jocko Willink'},
+  {text:'Default aggressive. When in doubt, attack the problem.',author:'Jocko Willink'},
+  {text:'Extreme ownership. No excuses. No one to blame but yourself.',author:'Jocko Willink'},
+  {text:'A good plan executed violently now is better than a perfect plan executed next week.',author:'Jocko Willink'},
+  // DAVID GOGGINS EXTENDED
+  {text:'We all have the ability to do the impossible. We just have to be willing to suffer for it.',author:'David Goggins'},
+  {text:'The most important thing in life is to live a life you won\'t regret.',author:'David Goggins'},
+  {text:'When your mind is telling you that you\'re done, you\'re only 40% done.',author:'David Goggins'},
+  {text:'Callous your mind the way you callous your hands.',author:'David Goggins'},
+  {text:'You are stopping you. You are giving up instead of getting hard.',author:'David Goggins'},
+  {text:'The only way you gain mental toughness is to do things you\'re not happy doing.',author:'David Goggins'},
+  {text:'Don\'t stop when you\'re tired. Stop when you\'re done.',author:'David Goggins'},
+  {text:'Everything in life is a mind game. Whenever we get swept under by life\'s dramas, it\'s because we\'ve forgotten that.',author:'David Goggins'},
+  {text:'You have to build calluses on your brain just like how you build calluses on your hands.',author:'David Goggins'},
+  {text:'Our culture has become hooked on the quick fix, the life hack, the efficiency. But there are no hacks to becoming uncommon.',author:'David Goggins'},
+  // MALCOLM X
+  {text:'The future belongs to those who prepare for it today.',author:'Malcolm X'},
+  {text:'Education is the passport to the future, for tomorrow belongs to those who prepare for it today.',author:'Malcolm X'},
+  {text:'A man who stands for nothing will fall for anything.',author:'Malcolm X'},
+  {text:'If you have no critics you\'ll likely have no success.',author:'Malcolm X'},
+  {text:'You can\'t separate peace from freedom because no one can be at peace unless he has his freedom.',author:'Malcolm X'},
+  {text:'Without education, you\'re not going anywhere in this world.',author:'Malcolm X'},
+  {text:'There is no better teacher than adversity. Every defeat, every heartbreak, every loss contains its own seed, its own lesson.',author:'Malcolm X'},
+  {text:'The day you stop racing is the day you win.',author:'Malcolm X'},
+  {text:'Be peaceful, be courteous, obey the law, respect everyone — but if someone puts his hand on you, send him to the cemetery.',author:'Malcolm X'},
+  {text:'I\'m for truth, no matter who tells it. I\'m for justice, no matter who it is for or against.',author:'Malcolm X'},
+  // DENZEL WASHINGTON
+  {text:'Without commitment you\'ll never start, but more importantly, without consistency you\'ll never finish.',author:'Denzel Washington'},
+  {text:'Do what you gotta do so you can do what you wanna do.',author:'Denzel Washington'},
+  {text:'Goals on the road to achievement cannot be achieved without discipline and consistency.',author:'Denzel Washington'},
+  {text:'If you don\'t fail, you\'re not even trying.',author:'Denzel Washington'},
+  {text:'Put God first in everything you do. Everything that I have is by the grace of God.',author:'Denzel Washington'},
+  {text:'True desire in the heart for anything good is God\'s proof to you sent beforehand to indicate it\'s already yours.',author:'Denzel Washington'},
+  {text:'Just because you are doing a lot more doesn\'t mean you are getting a lot more done.',author:'Denzel Washington'},
+  {text:'I\'ve always said, fall forward. Every failed experiment is one step closer to success.',author:'Denzel Washington'},
+  {text:'A child is not a thing to be owned. A child is a gift to be nurtured.',author:'Denzel Washington'},
+  {text:'At the end of the day, it\'s not about what you have or even what you\'ve accomplished. It\'s about what you\'ve done with those accomplishments.',author:'Denzel Washington'},
+  // MUHAMMAD ALI
+  {text:'I am the greatest. I said that even before I knew I was.',author:'Muhammad Ali'},
+  {text:'Float like a butterfly, sting like a bee. The hands can\'t hit what the eyes can\'t see.',author:'Muhammad Ali'},
+  {text:'It\'s lack of faith that makes people afraid of meeting challenges, and I believe in myself.',author:'Muhammad Ali'},
+  {text:'If my mind can conceive it, and my heart can believe it — then I can achieve it.',author:'Muhammad Ali'},
+  {text:'Don\'t count the days, make the days count.',author:'Muhammad Ali'},
+  {text:'Service to others is the rent you pay for your room here on earth.',author:'Muhammad Ali'},
+  {text:'A man who views the world the same at 50 as he did at 20 has wasted 30 years of his life.',author:'Muhammad Ali'},
+  {text:'He who is not courageous enough to take risks will accomplish nothing in life.',author:'Muhammad Ali'},
+  {text:'I hated every minute of training, but I said: suffer now and live the rest of your life as a champion.',author:'Muhammad Ali'},
+  {text:'The man who has no imagination has no wings.',author:'Muhammad Ali'},
+  {text:'Impossible is just a big word thrown around by small men who find it easier to live in the world they\'ve been given than to explore the power they have to change it.',author:'Muhammad Ali'},
+  {text:'Only a man who knows what it is like to be defeated can reach down to the bottom of his soul and come up with the extra ounce of power it takes to win.',author:'Muhammad Ali'},
+  // 2PAC
+  {text:'I know it seems hard sometimes but remember one thing. Through every dark night, there is a bright day after that.',author:'2Pac'},
+  {text:'Reality is wrong. Dreams are for real.',author:'2Pac'},
+  {text:'During your life, never stop dreaming. No one can take away your dreams.',author:'2Pac'},
+  {text:'I am not a perfectionist, but still I seek perfection. I am not a great romantic, but yet I aspire to romance.',author:'2Pac'},
+  {text:'Did you hear about the rose that grew from a crack in the concrete? Proving nature\'s law is wrong, it learned to walk without having feet.',author:'2Pac'},
+  // SPARTACUS
+  {text:'I am not a thing to be owned. I am a man.',author:'Spartacus'},
+  {text:'They took everything from us. Everything but the will to fight.',author:'Spartacus'},
+  {text:'A man who knows his own freedom is already undefeatable.',author:'Spartacus'},
+  // ITACHI UCHIHA
+  {text:'Those who forgive themselves and are able to accept their true nature — they are the strong ones.',author:'Itachi Uchiha'},
+  {text:'You and I are flesh and blood. I\'m always going to be there for you, even if it\'s only as an obstacle for you to overcome.',author:'Itachi Uchiha'},
+  {text:'Every jutsu has a weakness. The trick is knowing your own.',author:'Itachi Uchiha'},
+  // KRATOS
+  {text:'The cycle ends here. We must be better than this.',author:'Kratos'},
+  {text:'Do not be sorry. Be better.',author:'Kratos'},
+  {text:'A man is not measured by his strength, but by what he chooses to protect.',author:'Kratos'},
+];
+
+var checkedHabits = new Set();
+var activeLesson = null;
+
+// ── DATA LAYER ────────────────────────────────────────────────────────────
+// Always reads/writes localStorage instantly (fast, works offline)
+// When backend is enabled + user logged in, also syncs to cloud
+
+function getData(key, def) {
+  try {
+    var raw = localStorage.getItem(key);
+    return raw !== null ? JSON.parse(raw) : def;
+  } catch(e) { return def; }
+}
+
+function setData(key, val) {
+  localStorage.setItem(key, JSON.stringify(val));
+  // Fire-and-forget cloud sync — don't wait for it
+  if (isBackendEnabled() && AUTH.token) {
+    apiCall('POST', '/api/data/' + key, { value: val }).catch(function(){});
+  }
+}
+
+// Pull all cloud data on login and merge into localStorage
+async function syncFromCloud() {
+  if (!isBackendEnabled() || !AUTH.token) return;
+  var result = await apiCall('GET', '/api/data/sync');
+  if (!result || !result.data) return;
+  Object.entries(result.data).forEach(function(entry) {
+    var key = entry[0], val = entry[1];
+    // Only overwrite if cloud data is newer or local is empty
+    var local = localStorage.getItem(key);
+    if (!local || val) {
+      localStorage.setItem(key, JSON.stringify(val));
+    }
+  });
+  console.log('Cloud sync complete ✓');
+}
+
+// Push all localStorage data to cloud (first login merge)
+async function syncToCloud() {
+  if (!isBackendEnabled() || !AUTH.token) return;
+  var updates = {};
+  var wdKeys = Object.keys(localStorage).filter(function(k){ return k.startsWith('wd'); });
+  wdKeys.forEach(function(k) {
+    try { updates[k] = JSON.parse(localStorage.getItem(k)); } catch(e) {}
+  });
+  if (Object.keys(updates).length > 0) {
+    await apiCall('POST', '/api/data/sync', { updates: updates });
+  }
+}
+
+// ============ INIT ============
+var initNow = new Date();
+var now = initNow; // legacy alias — use new Date() inside functions
+var _dd = document.getElementById('dateDisplay'); if(_dd) _dd.textContent = initNow.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+// Shuffle quotes using a seeded random based on date so it changes daily
+// but is consistent within the same day, and not sequential by author
+var dateStr = initNow.getFullYear()+'-'+(initNow.getMonth()+1)+'-'+initNow.getDate();
+var seed = 0;
+for(var si=0; si<dateStr.length; si++) seed = (seed * 31 + dateStr.charCodeAt(si)) & 0xffffffff;
+// Use seed to pick from shuffled array
+var shuffled = QUOTES.slice();
+var s = Math.abs(seed);
+for(var i=shuffled.length-1; i>0; i--) {
+  s = (s * 1664525 + 1013904223) & 0xffffffff;
+  var j = Math.abs(s) % (i+1);
+  var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
+}
+var dayIdx = Math.floor((initNow - new Date(initNow.getFullYear(),0,0)) / 86400000);
+const q = shuffled[dayIdx % shuffled.length];
+function renderQuote() {
+  var qt = document.getElementById('quoteText');
+  var qa = document.getElementById('quoteAuthor');
+  if(qt) qt.textContent = '“' + q.text + '”';
+  if(qa) qa.textContent = '— ' + q.author;
+}
+
+// ============ APP INIT — see initApp() at bottom of script ============
+
+// ============ NAV ============
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  var page = document.getElementById('page-'+id);
+  if(page) { page.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  var target = btn ? btn.closest('.nav-btn') : null;
+  if(target) target.classList.add('active');
+  if(id==='progress') { try{ renderReport(); renderWarriorDadScore(); }catch(e){} }
+  if(id==='vault') { try{ renderMemories(); updateMemStats(); }catch(e){} }
+  if(id==='legacy') { try{ renderFears(); renderLegacy(); renderLetters(); renderMirrorHistory(); }catch(e){} }
+  if(id==='mission') { try{ renderWeeklyGoals(); renderMonthlyGoals(); }catch(e){} }
+}
+
+// ============ HABITS ============
+function toggleHabit(id) {
+  var wasChecked = checkedHabits.has(id);
+  if(wasChecked) checkedHabits.delete(id); else checkedHabits.add(id);
+  var card = document.getElementById('hc-'+id);
+  card.classList.toggle('done', checkedHabits.has(id));
+  if(!wasChecked) {
+    // Pulse animation on check
+    card.classList.remove('just-checked');
+    void card.offsetWidth;
+    card.classList.add('just-checked');
+    setTimeout(function(){ card.classList.remove('just-checked'); }, 500);
+    // Perfect score celebration
+    if(checkedHabits.size === HABITS.length) {
+      setTimeout(function(){
+        var bar = document.getElementById('scoreBar');
+        if(bar) { bar.classList.add('perfect'); setTimeout(function(){ bar.classList.remove('perfect'); }, 2000); }
+        showToast('All 7 disciplines. Elite. 🔥');
+      }, 650);
+    }
+  }
+  updateScore();
+}
+function updateScore() {
+  const n = checkedHabits.size;
+  document.getElementById('scoreText').textContent = n + ' / ' + HABITS.length;
+  document.getElementById('scoreBar').style.width = (n/HABITS.length*100)+'%';
+}
+
+// ============ SAVE DAY ============
+function saveDay() {
+  const intention = document.getElementById('intention').value.trim();
+  const lesson = document.getElementById('lesson').value.trim();
+  const journal = document.getElementById('journal').value.trim();
+  if(!intention && !checkedHabits.size && !lesson) { showToast('Add something first.'); return; }
+  const saveNow = new Date();
+  const log = getData('wdLog', []);
+  log.unshift({
+    date: saveNow.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}),
+    dateKey: getLocalDateKey(),
+    intention, lesson, journal,
+    habits: [...checkedHabits],
+    score: checkedHabits.size,
+    ts: Date.now()
+  });
+  setData('wdLog', log.slice(0,60));
+  renderLog(); renderReport();
+  triggerSealCeremony();
+}
+
+function triggerSealCeremony() {
+  var log = getData('wdLog', []);
+  var streak = 0;
+  var checkDate = new Date();
+  for(var i = 0; i < 60; i++) {
+    var k = checkDate;
+    var key = k.getFullYear()+'-'+String(k.getMonth()+1).padStart(2,'0')+'-'+String(k.getDate()).padStart(2,'0');
+    if(log.find(function(e){ return e.dateKey === key; })) {
+      if(i === 0 || streak > 0) streak++;
+    } else if(i > 0) { break; }
+    checkDate.setDate(checkDate.getDate() - 1);
+  }
+  var sonName = getSonName();
+  var msgs = [
+    'Another brick in the legacy.',
+    sonName + ' has a warrior for a father.',
+    'The record grows. Keep going.',
+    'Discipline compounds. So does legacy.',
+    streak + ' days straight. The standard is rising.',
+  ];
+  var msg = streak >= 7 ? msgs[1] : streak >= 3 ? msgs[4] : msgs[Math.floor(Math.random()*3)];
+  document.getElementById('sealCeremonyMsg').textContent = msg;
+  var overlay = document.getElementById('sealCeremony');
+  overlay.classList.remove('firing');
+  void overlay.offsetWidth; // force reflow
+  overlay.classList.add('firing');
+  setTimeout(function(){ overlay.classList.remove('firing'); }, 1900);
+}
+
+function renderLog() {
+  const log = getData('wdLog', []);
+  const el = document.getElementById('logContainer');
+  if(!log.length) { el.innerHTML = '<div style="color:var(--muted);font-style:italic;font-size:15px">No days sealed yet. Begin.</div>'; return; }
+  el.innerHTML = log.slice(0,7).map(e => `
+    <div class="log-entry">
+      <div class="log-meta">
+        <span class="log-date">${e.date}</span>
+        <span class="log-score">⚔ ${e.score}/${HABITS.length}</span>
+      </div>
+      ${e.intention ? `<div class="log-intention">"${e.intention}"</div>` : ''}
+      ${e.lesson ? `<div class="log-lesson">📖 ${e.lesson}</div>` : ''}
+      ${e.habits && e.habits.length ? `<div class="log-habits">${e.habits.map(id=>{const h=HABITS.find(x=>x.id===id);return h?h.icon+' '+h.name:''}).join(' · ')}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ============ AI RESPONSE ============
+async function getAIResponse() {
+  const journal = document.getElementById('journal').value.trim();
+  if(!journal) { showToast('Write something first.'); return; }
+  const bubble = document.getElementById('aiBubble');
+  const aiText = document.getElementById('aiText');
+  bubble.style.display = 'block';
+  aiText.innerHTML = '<div class="ai-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div>';
+
+  try {
+    var text = null;
+
+    if (isBackendEnabled() && AUTH.token) {
+      // Route through secure backend
+      var result = await apiCall('POST', '/api/ai/mentor', {
+        journal: journal,
+        sonName: getSonName()
+      });
+      text = result ? result.reply : null;
+    } else {
+      // Fallback: direct call (dev/offline mode — key exposed)
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          model:'claude-sonnet-4-20250514',
+          max_tokens:300,
+          system:'You are a balanced warrior-father mentor. Respond to his journal entry with wisdom that is supportive but challenging. Concise (3-5 sentences). Speak man to man.',
+          messages:[{role:'user', content: journal}]
+        })
+      });
+      const data = await res.json();
+      text = data.content?.[0]?.text || null;
+    }
+
+    aiText.textContent = text || 'Mentor is offline. Reflect on your own words — they already carry the answer.';
+  } catch(e) {
+    aiText.textContent = 'Mentor is offline. Reflect on your own words — they already carry the answer.';
+  }
+}
+
+// Investing integrated into daily habits and journal reflection
+
+// ============ LESSONS ============
+var activeLessonCat = 'All';
+
+function renderLessons() {
+  const custom = getData('wdLessons',[]);
+  const all = [...BUILT_IN_LESSONS, ...custom];
+  const cats = ['All',...new Set(all.map(l=>l.cat))];
+
+  const filterEl = document.getElementById('lessonFilters');
+  filterEl.innerHTML = cats.map(c=>`<button class="filter-tag${c===activeLessonCat?' active':''}" onclick="filterLessons('${c}')">${c}</button>`).join('');
+
+  const filtered = activeLessonCat==='All' ? all : all.filter(l=>l.cat===activeLessonCat);
+  const el = document.getElementById('lessonsContainer');
+  if(!filtered.length){ el.innerHTML='<div style="color:var(--muted);font-style:italic">No lessons in this category yet.</div>'; return; }
+  el.innerHTML = filtered.map(l=>`
+    <div class="lesson-card">
+      <div class="lesson-cat">${l.cat}</div>
+      <div class="lesson-title">${l.title}</div>
+      <div class="lesson-body">${l.body}</div>
+      <div class="lesson-age">Best taught: ${l.age}</div>
+      ${!l.builtin ? `<button class="btn-danger" style="margin-top:8px" onclick="deleteLesson('${l.id}')">Remove</button>` : ''}
+    </div>
+  `).join('');
+}
+
+function filterLessons(cat) { activeLessonCat=cat; renderLessons(); }
+
+function addLesson() {
+  const title = document.getElementById('l-title').value.trim();
+  const body = document.getElementById('l-body').value.trim();
+  const cat = document.getElementById('l-cat').value;
+  const age = document.getElementById('l-age').value;
+  if(!title||!body){ showToast('Title and lesson required.'); return; }
+  const lessons = getData('wdLessons',[]);
+  lessons.push({id:'cl'+Date.now(),title,body,cat,age,builtin:false});
+  setData('wdLessons',lessons);
+  document.getElementById('l-title').value='';
+  document.getElementById('l-body').value='';
+  renderLessons(); showToast('Lesson added');
+}
+
+function deleteLesson(id) {
+  setData('wdLessons', getData('wdLessons',[]).filter(l=>l.id!==id));
+  renderLessons();
+}
+
+// ============ UPGRADED GOALS ============
+var activeGoalTab = 'today';
+var notifTimers = [];
+
+function switchMissionTab(tab) {
+  activeGoalTab = tab;
+  ['today','weekly','monthly'].forEach(function(t) {
+    var view = document.getElementById('mview-'+t);
+    var btn = document.getElementById('mtab-'+t);
+    if(view) view.style.display = t===tab ? 'block' : 'none';
+    if(btn) btn.classList.toggle('active', t===tab);
+  });
+}
+
+// ── NOTIFICATIONS ──────────────────────────────────────────────────────────
+function requestNotifPermission(cb) {
+  var el = document.getElementById('notifStatus');
+  if(!('Notification' in window)) {
+    if(el) el.textContent = '⚠ Notifications not supported on this browser.';
+    if(cb) cb(false); return;
+  }
+  if(Notification.permission === 'granted') {
+    if(el) el.textContent = '⚠ Reminders only fire while the app is open in your browser.';
+    if(cb) cb(true); return;
+  }
+  Notification.requestPermission().then(function(p) {
+    if(p === 'granted') {
+      if(el) el.textContent = '⚠ Reminders set — but only fire while this app is open.';
+      if(cb) cb(true);
+    } else {
+      if(el) el.textContent = 'Notifications blocked. Enable in browser settings to use reminders.';
+      if(cb) cb(false);
+    }
+  });
+}
+
+function scheduleNotif(title, time) {
+  if(!time || Notification.permission !== 'granted') return;
+  var parts = time.split(':');
+  var now = new Date();
+  var target = new Date();
+  target.setHours(parseInt(parts[0]), parseInt(parts[1]), 0, 0);
+  if(target <= now) target.setDate(target.getDate() + 1);
+  var ms = target - now;
+  var timer = setTimeout(function() {
+    new Notification('Warrior Dad Daily ⚔', {
+      body: 'Time for: ' + title,
+      icon: '',
+      badge: ''
+    });
+  }, ms);
+  notifTimers.push(timer);
+}
+
+function rescheduleAllNotifs() {
+  notifTimers.forEach(function(t){ clearTimeout(t); });
+  notifTimers = [];
+  if(Notification.permission !== 'granted') return;
+  var tasks = getData('wdDailyTasks', []);
+  tasks.forEach(function(t) {
+    if(t.time && !t.done) scheduleNotif(t.title, t.time);
+  });
+}
+
+// ── DAILY TASKS ────────────────────────────────────────────────────────────
+function addDailyTask() {
+  var title = document.getElementById('gd-title').value.trim();
+  var cat = document.getElementById('gd-cat').value;
+  var time = document.getElementById('gd-time').value;
+  if(!title) { showToast('Task name required.'); return; }
+  requestNotifPermission(function(granted) {
+    var tasks = getData('wdDailyTasks', []);
+    tasks.push({ id:'dt'+Date.now(), title, cat, time, done: false, dateAdded: getLocalDateKey() });
+    setData('wdDailyTasks', tasks);
+    document.getElementById('gd-title').value = '';
+    document.getElementById('gd-time').value = '';
+    if(granted && time) scheduleNotif(title, time);
+    renderDailyTasks();
+    showToast('Task added ⚔');
+  });
+}
+
+function toggleDailyTask(id) {
+  var tasks = getData('wdDailyTasks', []);
+  var t = tasks.find(function(x){ return x.id===id; });
+  if(t) t.done = !t.done;
+  setData('wdDailyTasks', tasks);
+  renderDailyTasks();
+  showToast(t && t.done ? 'Done 🔥' : 'Back on the list ⚔');
+}
+
+function deleteDailyTask(id) {
+  setData('wdDailyTasks', getData('wdDailyTasks',[]).filter(function(t){ return t.id!==id; }));
+  renderDailyTasks();
+}
+
+function renderDailyTasks() {
+  var tasks = getData('wdDailyTasks', []);
+  var el = document.getElementById('dailyTasksContainer');
+  if(!el) return;
+  if(!tasks.length) { el.innerHTML = '<div style="color:var(--muted);font-style:italic;font-size:15px">No daily tasks yet. Add your first one.</div>'; return; }
+  var done = tasks.filter(function(t){ return t.done; }).length;
+  var pct = Math.round(done/tasks.length*100);
+  var sorted = tasks.slice().sort(function(a,b){
+    if(!a.time && !b.time) return 0;
+    if(!a.time) return 1; if(!b.time) return -1;
+    return a.time.localeCompare(b.time);
+  });
+  el.innerHTML =
+    '<div style="margin-bottom:12px">' +
+      '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">' +
+        '<span style="color:var(--muted)">Daily Progress</span>' +
+        '<span style="font-family:Cinzel,serif;color:var(--gold)">'+done+'/'+tasks.length+' done</span>' +
+      '</div>' +
+      '<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:linear-gradient(90deg,var(--gold),var(--orange))"></div></div>' +
+    '</div>' +
+    sorted.map(function(t) {
+      return '<div class="task-card'+(t.done?' done-task':'')+'">' +
+        '<div class="task-check'+(t.done?' checked':'')+'" onclick="toggleDailyTask(\''+t.id+'\')">'+( t.done?'✓':'')+' </div>' +
+        '<div class="task-info">' +
+          '<div class="task-title"'+(t.done?' style="text-decoration:line-through;opacity:0.5"':'')+'>'+t.title+'</div>' +
+          '<div class="task-meta">' +
+            '<span class="task-cat">'+t.cat+'</span>' +
+            (t.time ? '<span class="task-time">⏰ '+t.time+'</span>' : '') +
+          '</div>' +
+        '</div>' +
+        '<button class="btn-danger" onclick="deleteDailyTask(\''+t.id+'\')">✕</button>' +
+      '</div>';
+    }).join('');
+}
+
+// ── GOAL REMINDER HELPER ───────────────────────────────────────────────────
+function scheduleGoalReminder(title, time, repeat) {
+  if(!time || Notification.permission !== 'granted') return;
+  var parts = time.split(':');
+  var now = new Date();
+  var target = new Date();
+  target.setHours(parseInt(parts[0]), parseInt(parts[1]), 0, 0);
+  if(target <= now) target.setDate(target.getDate() + 1);
+  var day = target.getDay(); // 0=Sun,6=Sat
+  // Skip if repeat pattern doesn't match
+  if(repeat === 'weekdays' && (day === 0 || day === 6)) target.setDate(target.getDate() + (day===6?2:1));
+  if(repeat === 'weekends' && day > 0 && day < 6) {
+    var daysUntilSat = 6 - day;
+    target.setDate(target.getDate() + daysUntilSat);
+  }
+  var ms = target - now;
+  var timer = setTimeout(function() {
+    new Notification('Warrior Dad Daily ⚔', { body: 'Goal reminder: ' + title });
+  }, ms);
+  notifTimers.push(timer);
+}
+
+// ── WEEKLY GOALS ───────────────────────────────────────────────────────────
+function addWeeklyGoal() {
+  var title = document.getElementById('gw-title').value.trim();
+  var cat = document.getElementById('gw-cat').value;
+  var target = parseInt(document.getElementById('gw-target').value) || 0;
+  var unit = document.getElementById('gw-unit').value.trim();
+  var current = parseInt(document.getElementById('gw-progress').value) || 0;
+  var why = document.getElementById('gw-why').value.trim();
+  if(!title) { showToast('Mission title required.'); return; }
+  if(!target) { showToast('Set a target number.'); return; }
+  var goals = getData('wdWeeklyGoals', []);
+  goals.push({ id:'wg'+Date.now(), title, cat, target, unit, current, why, done: false });
+  setData('wdWeeklyGoals', goals);
+  document.getElementById('gw-title').value = '';
+  document.getElementById('gw-unit').value = '';
+  document.getElementById('gw-target').value = '';
+  document.getElementById('gw-progress').value = '';
+  document.getElementById('gw-why').value = '';
+  renderWeeklyGoals(); showToast('Mission set ⚔');
+}
+
+function toggleWeeklyGoal(id) {
+  var goals = getData('wdWeeklyGoals', []);
+  var g = goals.find(function(x){ return x.id===id; });
+  if(g) g.done = !g.done;
+  setData('wdWeeklyGoals', goals); renderWeeklyGoals();
+}
+
+function updateWeeklyProgress(id, val) {
+  var goals = getData('wdWeeklyGoals', []);
+  var g = goals.find(function(x){ return x.id===id; });
+  if(g) {
+    g.current = Math.max(0, parseInt(val) || 0);
+    if(g.current >= g.target) { g.done = true; showToast('Mission complete! 🔥'); }
+  }
+  setData('wdWeeklyGoals', goals); renderWeeklyGoals();
+}
+
+function deleteWeeklyGoal(id) {
+  setData('wdWeeklyGoals', getData('wdWeeklyGoals',[]).filter(function(g){ return g.id!==id; }));
+  renderWeeklyGoals();
+}
+
+function renderWeeklyGoals() {
+  var goals = getData('wdWeeklyGoals', []);
+  var el = document.getElementById('weeklyGoalsContainer');
+  if(!el) return;
+  if(!goals.length) { el.innerHTML = '<div style="color:var(--muted);font-style:italic;font-size:15px">No missions set. What will you conquer this week?</div>'; return; }
+  el.innerHTML = goals.map(function(g) {
+    var cur = g.current || 0;
+    var pct = g.target ? Math.min(100, Math.round(cur / g.target * 100)) : 0;
+    var done = pct >= 100 || g.done;
+    var scoreColor = done ? 'var(--green-bright)' : pct >= 50 ? 'var(--gold)' : 'var(--orange)';
+    var progressLabel = cur + ' / ' + g.target + (g.unit ? ' ' + g.unit : '');
+    return '<div class="weekly-card' + (done ? ' done-task' : '') + '" style="padding:16px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">' +
+        '<div style="flex:1;min-width:0">' +
+          '<div style="font-size:10px;color:var(--orange);font-family:Cinzel,serif;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px">' + g.cat + '</div>' +
+          '<div style="font-size:16px;font-weight:700;line-height:1.3' + (done ? ';text-decoration:line-through;opacity:0.55' : '') + '">' + g.title + '</div>' +
+          (g.why ? '<div style="font-size:13px;font-style:italic;color:var(--muted);margin-top:3px">"' + g.why + '"</div>' : '') +
+        '</div>' +
+        '<div style="text-align:right;flex-shrink:0;margin-left:14px">' +
+          '<div style="font-family:Cinzel,serif;font-size:24px;font-weight:900;color:' + scoreColor + ';line-height:1">' + pct + '%</div>' +
+          '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + progressLabel + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="bar-bg" style="height:6px;margin-bottom:12px"><div class="bar-fill" style="width:' + pct + '%;background:linear-gradient(90deg,var(--orange),var(--gold));transition:width 0.6s ease"></div></div>' +
+      '<div style="display:flex;align-items:center;gap:8px">' +
+        '<span style="font-size:12px;color:var(--muted)">Progress:</span>' +
+        '<input type="number" min="0" value="' + cur + '" style="width:72px;padding:6px 10px;font-size:15px;font-family:Cinzel,serif;text-align:center" data-wid="' + g.id + '" onchange="updateWeeklyProgress(this.dataset.wid, this.value)">' +
+        '<span style="font-size:13px;color:var(--muted)">' + (g.unit || '') + '</span>' +
+        '<button class="btn-sm" style="margin-left:auto" data-wid="' + g.id + '" onclick="toggleWeeklyGoal(this.dataset.wid)">' + (done ? 'Reopen' : 'Done') + '</button>' +
+        '<button class="btn-danger" data-wid="' + g.id + '" onclick="deleteWeeklyGoal(this.dataset.wid)">✕</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+// ── MONTHLY GOALS ──────────────────────────────────────────────────────────
+function addMonthlyGoal() {
+  var title = document.getElementById('gm-title').value.trim();
+  var cat = document.getElementById('gm-cat').value;
+  var target = document.getElementById('gm-target').value.trim();
+  var why = document.getElementById('gm-why').value.trim();
+  if(!title) { showToast('Outcome title required.'); return; }
+  var goals = getData('wdMonthlyGoals', []);
+  goals.push({ id:'mg'+Date.now(), title, cat, target, why, progress: 0, done: false });
+  setData('wdMonthlyGoals', goals);
+  document.getElementById('gm-title').value = '';
+  document.getElementById('gm-target').value = '';
+  document.getElementById('gm-why').value = '';
+  renderMonthlyGoals(); showToast('Outcome committed \U0001f525');
+}
+
+function toggleMonthlyGoal(id) {
+  var goals = getData('wdMonthlyGoals', []);
+  var g = goals.find(function(x){ return x.id===id; });
+  if(g) g.done = !g.done;
+  setData('wdMonthlyGoals', goals); renderMonthlyGoals();
+}
+
+function updateMonthlyProgress(id, val) {
+  var goals = getData('wdMonthlyGoals', []);
+  var g = goals.find(function(x){ return x.id===id; });
+  if(g) { g.progress = Math.min(100, Math.max(0, parseInt(val)||0)); if(g.progress===100) g.done=true; }
+  setData('wdMonthlyGoals', goals); renderMonthlyGoals();
+}
+
+function deleteMonthlyGoal(id) {
+  setData('wdMonthlyGoals', getData('wdMonthlyGoals',[]).filter(function(g){ return g.id!==id; }));
+  renderMonthlyGoals();
+}
+
+function renderMonthlyGoals() {
+  var goals = getData('wdMonthlyGoals', []);
+  var el = document.getElementById('monthlyGoalsContainer');
+  if(!el) return;
+  if(!goals.length) { el.innerHTML = '<div style="color:var(--muted);font-style:italic;font-size:15px">No outcomes set. Who are you becoming this month?</div>'; return; }
+  el.innerHTML = goals.map(function(g) {
+    return '<div class="monthly-card'+(g.done?' done-task':'')+'">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">' +
+        '<div>' +
+          '<div style="font-size:11px;color:#a060ff;font-family:Cinzel,serif;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px">'+g.cat+'</div>' +
+          '<div style="font-size:17px;font-weight:700"'+(g.done?' style="text-decoration:line-through;opacity:0.5"':'')+'>'+g.title+'</div>' +
+          (g.target ? '<div style="font-size:13px;color:var(--muted);margin-top:3px">Target: '+g.target+'</div>' : '') +
+          (g.why ? '<div style="font-size:14px;font-style:italic;color:#907880;margin-top:6px">"'+g.why+'"</div>' : '') +
+        '</div>' +
+        '<button class="btn-danger" data-mid="'+g.id+'" onclick="deleteMonthlyGoal(this.dataset.mid)">✕</button>' +
+      '</div>' +
+      '<div class="bar-bg" style="margin:10px 0 6px"><div class="bar-fill" style="width:'+g.progress+'%;background:linear-gradient(90deg,#a060ff,#6030c0)"></div></div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">' +
+        '<span style="color:var(--muted)">'+g.progress+'% complete</span>' +
+        '<div style="display:flex;gap:6px">' +
+          '<input type="range" min="0" max="100" value="'+g.progress+'" data-mid="'+g.id+'" onchange="updateMonthlyProgress(this.dataset.mid,this.value)" style="width:80px;accent-color:#a060ff;background:none;border:none;padding:0;cursor:pointer">' +
+          '<button class="btn-sm" data-mid="'+g.id+'" onclick="toggleMonthlyGoal(this.dataset.mid)">'+(g.done?'Reopen':'Done')+'</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderGoals() {
+  try{ renderDailyTasks(); }catch(e){}
+  try{ renderWeeklyGoals(); }catch(e){}
+  try{ renderMonthlyGoals(); }catch(e){}
+  try{ rescheduleAllNotifs(); }catch(e){}
+}
+
+// ============ WEEKLY REPORT ============
+function renderReport() {
+  var log = getData('wdLog',[]);
+  var last7 = log.slice(0,7);
+  var totalDays = last7.length;
+  var totalScore = last7.reduce(function(a,e){ return a+(e.score||0); },0);
+  var avgScore = totalDays ? Math.round(totalScore/totalDays*10)/10 : 0;
+  var perfectDays = last7.filter(function(e){ return e.score>=HABITS.length; }).length;
+  var lessonDays = last7.filter(function(e){ return e.lesson&&e.lesson.trim(); }).length;
+  var el = document.getElementById('reportStats');
+  if(el) el.innerHTML = [
+    {n: totalDays, l:'Days Logged'},
+    {n: avgScore+'/'+HABITS.length, l:'Avg Score'},
+    {n: perfectDays, l:'Perfect Days'},
+    {n: lessonDays, l:'Lessons Taught'}
+  ].map(function(s){ return '<div class="stat-card"><div class="stat-num">'+s.n+'</div><div class="stat-label">'+s.l+'</div></div>'; }).join('');
+
+  var streakEl = document.getElementById('streakRow');
+  if(streakEl) {
+    var days = [];
+    for(var i=6;i>=0;i--) {
+      var d = new Date(); d.setDate(d.getDate()-i);
+      var key = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+      var found = last7.find(function(e){ return e.dateKey===key; });
+      var label = ['S','M','T','W','T','F','S'][d.getDay()];
+      days.push('<div class="streak-day'+(found?' filled':'')+'">'+label+'</div>');
+    }
+    streakEl.innerHTML = days.join('');
+  }
+
+  var habitCounts = {};
+  HABITS.forEach(function(h){ habitCounts[h.id]=0; });
+  last7.forEach(function(e){ (e.habits||[]).forEach(function(h){ if(habitCounts[h]!==undefined) habitCounts[h]++; }); });
+  var habitEl = document.getElementById('habitReport');
+  if(habitEl) habitEl.innerHTML = HABITS.map(function(h){
+    var count = habitCounts[h.id];
+    var pct = totalDays ? Math.round(count/totalDays*100) : 0;
+    return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px"><span>'+h.icon+' '+h.name+'</span><span style="color:var(--muted)">'+count+'/'+totalDays+' days</span></div><div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%"></div></div></div>';
+  }).join('');
+
+  var lessons = last7.filter(function(e){ return e.lesson; }).map(function(e){ return '<div class="log-entry"><div class="log-date">'+e.date+'</div><div style="font-size:15px;font-style:italic">"'+e.lesson+'"</div></div>'; }).join('');
+  var lessonEl = document.getElementById('lessonReport');
+  if(lessonEl) lessonEl.innerHTML = lessons || '<div style="color:var(--muted);font-style:italic;font-size:15px">No lessons recorded this week.</div>';
+
+  var logEl = document.getElementById('logContainer');
+  if(logEl) renderLog();
+}
+
+// ============ WARRIOR DAD SCORE ============
+function calcWarriorDadScore() {
+  var log = getData('wdLog',[]);
+  var last7 = log.slice(0,7);
+  var totalDays = last7.length;
+  var habitScore = 0;
+  if(totalDays) {
+    var totalPossible = totalDays * HABITS.length;
+    var totalDone = last7.reduce(function(a,e){ return a+(e.habits||[]).length; },0);
+    habitScore = Math.round((totalDone/totalPossible)*100);
+  }
+  var allGoals = getData('wdDailyTasks',[]).concat(getData('wdWeeklyGoals',[])).concat(getData('wdMonthlyGoals',[]));
+  var goalScore = 0;
+  if(allGoals.length) {
+    var doneGoals = allGoals.filter(function(g){ return g.done||(g.progress&&g.progress>=100)||(g.current&&g.target&&g.current>=g.target); }).length;
+    goalScore = Math.round((doneGoals/allGoals.length)*100);
+  }
+  var sonScore = 0;
+  if(totalDays) {
+    var presentDays = last7.filter(function(e){ return (e.habits||[]).includes('present'); }).length;
+    var lessonDays = last7.filter(function(e){ return e.lesson&&e.lesson.trim(); }).length;
+    sonScore = Math.round(((presentDays+lessonDays)/(totalDays*2))*100);
+  }
+  var fears = getData('wdFears',[]);
+  var fearScore = fears.length ? Math.round((fears.filter(function(f){ return f.conquered; }).length/fears.length)*100) : 50;
+  var legacy = getData('wdLegacy',{});
+  var legacyVals = ['inherit','knowledge','fitness'].map(function(t){
+    var d = legacy[t]||{val:0,goal:0};
+    return d.goal ? Math.min(100,Math.round(d.val/d.goal*100)) : 0;
+  });
+  var legacyScore = Math.round(legacyVals.reduce(function(a,b){return a+b;},0)/3);
+  var mirrors = getData('wdMirror',[]);
+  var mirrorScore = mirrors.length ? mirrors[0].score : 50;
+  var total = Math.round(habitScore*0.30+goalScore*0.20+sonScore*0.15+fearScore*0.15+legacyScore*0.10+mirrorScore*0.10);
+  return { total, habitScore, goalScore, sonScore, fearScore, legacyScore, mirrorScore };
+}
+
+function renderWarriorDadScore() {
+  var el = document.getElementById('wds-number');
+  if(!el) return;
+  var log = getData('wdLog',[]);
+  if(!log.length) return;
+  var s = calcWarriorDadScore();
+  animateCountUp('wds-number', s.total);
+  var label, verdict, color;
+  if(s.total>=90){label='Elite';verdict='"You are the standard. Keep rising."';color='var(--gold)';}
+  else if(s.total>=75){label='Strong';verdict='"You\'re building something real. Don\'t stop."';color='var(--gold)';}
+  else if(s.total>=60){label='Building';verdict='"The foundation is there. Keep stacking."';color='var(--orange)';}
+  else if(s.total>=40){label='Slipping';verdict='"Your son is watching. Get back on track."';color='#e08040';}
+  else{label='Wake Up Call';verdict='"This is the moment. Rise or stay the same."';color='var(--red-bright)';}
+  var numEl = document.getElementById('wds-number');
+  if(numEl) { numEl.style.background='linear-gradient(135deg,'+color+',var(--orange))'; numEl.style.webkitBackgroundClip='text'; numEl.style.webkitTextFillColor='transparent'; }
+  var lblEl = document.getElementById('wds-label'); if(lblEl){ lblEl.textContent=label; lblEl.style.color=color; }
+  var vEl = document.getElementById('wds-verdict'); if(vEl) vEl.textContent=verdict;
+  var bkEl = document.getElementById('wds-breakdown');
+  if(bkEl) bkEl.innerHTML=[{label:'Habits',val:s.habitScore},{label:'Goals',val:s.goalScore},{label:'With Son',val:s.sonScore},{label:'Fears',val:s.fearScore},{label:'Legacy',val:s.legacyScore},{label:'Mirror',val:s.mirrorScore}].map(function(p){return '<div class="wds-pill"><div class="wds-pill-num">'+p.val+'</div><div class="wds-pill-label">'+p.label+'</div></div>';}).join('');
+}
+
+// ============ FACE THE FEAR ============
+function addFear() {
+  var name = document.getElementById('f-name').value.trim();
+  var cost = document.getElementById('f-cost').value.trim();
+  var action = document.getElementById('f-action').value.trim();
+  if(!name){ showToast('Name the fear first.'); return; }
+  var fears = getData('wdFears',[]);
+  fears.unshift({id:'f'+Date.now(),name,cost,action,conquered:false,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});
+  setData('wdFears',fears);
+  document.getElementById('f-name').value='';
+  document.getElementById('f-cost').value='';
+  document.getElementById('f-action').value='';
+  renderFears(); showToast('Fear confronted \u2694');
+}
+
+function toggleFear(id) {
+  var fears = getData('wdFears',[]);
+  var f = fears.find(function(x){ return x.id===id; });
+  if(f) f.conquered = !f.conquered;
+  setData('wdFears',fears); renderFears();
+  if(f.conquered){ setTimeout(function(){ var card=document.querySelector('[data-fearid="'+id+'"]'); if(card){ card.classList.add('fear-just-conquered'); setTimeout(function(){card.classList.remove('fear-just-conquered');},600); } },50); showToast('Fear conquered. Warrior. \U0001f525'); }
+  else showToast('Keep fighting \u2694');
+}
+
+function deleteFear(id) {
+  setData('wdFears',getData('wdFears',[]).filter(function(x){return x.id!==id;}));
+  renderFears();
+}
+
+function renderFears() {
+  var fears = getData('wdFears',[]);
+  var el = document.getElementById('fearList');
+  if(!el) return;
+  if(!fears.length){ el.innerHTML='<div style="color:var(--muted);font-style:italic;font-size:15px">No fears confronted yet. Name them — it takes away their power.</div>'; return; }
+  el.innerHTML = fears.map(function(f){
+    return '<div class="fear-card '+(f.conquered?'fear-conquered':'')+'" data-fearid="'+f.id+'">' +
+      '<div class="fear-card-title">'+(f.conquered?'\u2713 Conquered':'\u26a0 Active Fear')+' \u00b7 '+f.date+'</div>' +
+      '<div class="fear-card-text">'+f.name+'</div>' +
+      (f.cost?'<div class="fear-card-cost">'+f.cost+'</div>':'') +
+      (f.action?'<div class="fear-card-action">'+f.action+'</div>':'') +
+      '<div style="display:flex;gap:8px;margin-top:10px">' +
+        '<button class="btn-sm" data-fid="'+f.id+'" onclick="toggleFear(this.dataset.fid)">'+(f.conquered?'Reopen':'Mark Conquered')+'</button>' +
+        '<button class="btn-danger" data-fid="'+f.id+'" onclick="deleteFear(this.dataset.fid)">Remove</button>' +
+      '</div></div>';
+  }).join('');
+}
+
+// ============ LEGACY SCOREBOARD ============
+function updateLegacy(type) {
+  var val = parseFloat(document.getElementById('lv-'+type+'-val').value)||0;
+  var goal = parseFloat(document.getElementById('lv-'+type+'-goal').value)||0;
+  if(!goal){ showToast('Set a goal first.'); return; }
+  var legacy = getData('wdLegacy',{});
+  legacy[type]={val,goal};
+  setData('wdLegacy',legacy);
+  renderLegacy(); showToast('Legacy updated \U0001f525');
+}
+
+function renderLegacy() {
+  var legacy = getData('wdLegacy',{});
+  ['inherit','knowledge','fitness'].forEach(function(type){
+    var data = legacy[type]||{val:0,goal:0};
+    var pct = data.goal ? Math.min(100,Math.round(data.val/data.goal*100)) : 0;
+    var barEl = document.getElementById('lv-'+type+'-bar');
+    var pctEl = document.getElementById('lv-'+type+'-pct');
+    if(barEl) barEl.style.width=pct+'%';
+    if(pctEl) pctEl.textContent=pct+'%';
+    if(data.val){ var ve=document.getElementById('lv-'+type+'-val'); if(ve) ve.value=data.val; }
+    if(data.goal){ var ge=document.getElementById('lv-'+type+'-goal'); if(ge) ge.value=data.goal; }
+  });
+}
+
+// ============ MIRROR CHECK ============
+function submitMirror() {
+  var scores = ['mq1','mq2','mq3','mq4','mq5'].map(function(id){ return parseInt(document.getElementById(id).value); });
+  if(scores.some(function(s){ return isNaN(s); })){ showToast('Answer all 5 questions.'); return; }
+  var total = scores.reduce(function(a,b){return a+b;},0);
+  var pct = Math.round(total/15*100);
+  var verdict = pct>=80?'You are the man. Keep pushing.':pct>=60?'You\'re moving. Stay hungry.':pct>=40?'You know what needs to change. Act now.':'This is your wake up call. Rise.';
+  var history = getData('wdMirror',[]);
+  history.unshift({date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),score:pct,verdict,ts:Date.now()});
+  setData('wdMirror',history.slice(0,12));
+  document.getElementById('mirrorForm').style.display='none';
+  var res = document.getElementById('mirrorResult');
+  res.style.display='block';
+  res.innerHTML='<div class="mirror-score-display"><div class="mirror-score-num">'+pct+'%</div><div class="mirror-score-label">Warrior Score</div><div class="mirror-verdict">"'+verdict+'"</div></div><button class="btn-sm" style="width:100%;margin-top:10px" onclick="resetMirror()">Take Again</button>';
+  renderMirrorHistory();
+}
+
+function resetMirror() {
+  ['mq1','mq2','mq3','mq4','mq5'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+  document.getElementById('mirrorForm').style.display='block';
+  document.getElementById('mirrorResult').style.display='none';
+}
+
+function renderMirrorHistory() {
+  var history = getData('wdMirror',[]);
+  var el = document.getElementById('mirrorHistory');
+  if(!el) return;
+  if(!history.length){ el.innerHTML=''; return; }
+  el.innerHTML='<div class="section-label" style="margin-top:16px">Past Mirror Checks</div>'+history.map(function(h){
+    var col=h.score>=80?'var(--green-bright)':h.score>=60?'var(--gold)':h.score>=40?'var(--orange)':'var(--red-bright)';
+    return '<div class="past-mirror"><div class="past-mirror-date">'+h.date+'</div><div style="display:flex;align-items:baseline;gap:10px"><div class="past-mirror-score" style="color:'+col+'">'+h.score+'%</div><div style="font-size:14px;font-style:italic;color:var(--muted)">"'+h.verdict+'"</div></div></div>';
+  }).join('');
+}
+
+// ============ LETTER VAULT ============
+function toggleLetterType() {
+  var type = document.getElementById('ll-type').value;
+  var aw = document.getElementById('ll-age-wrap'); if(aw) aw.style.display=type==='age'?'block':'none';
+  var mw = document.getElementById('ll-milestone-wrap'); if(mw) mw.style.display=type==='milestone'?'block':'none';
+}
+
+function saveLetter() {
+  var title = document.getElementById('ll-title').value.trim();
+  var body = document.getElementById('ll-body').value.trim();
+  var type = document.getElementById('ll-type').value;
+  if(!title||!body){ showToast('Title and letter required.'); return; }
+  var tag = type==='age'?'Open at Age '+document.getElementById('ll-age').value:document.getElementById('ll-milestone').value;
+  var letters = getData('wdLetters',[]);
+  letters.unshift({id:'lt'+Date.now(),title,body,type,tag,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),preview:body.substring(0,80)+(body.length>80?'...':'')});
+  setData('wdLetters',letters);
+  document.getElementById('ll-title').value='';
+  document.getElementById('ll-body').value='';
+  renderLetters();
+  setTimeout(function(){ var cards=document.querySelectorAll('.letter-card'); if(cards.length){ cards[0].classList.add('just-sealed'); setTimeout(function(){cards[0].classList.remove('just-sealed');},800); } },50);
+  showToast('Letter sealed. He will read this one day. \U0001f4dc');
+}
+
+function toggleLetter(id) {
+  var el = document.getElementById('le-'+id);
+  if(el) el.classList.toggle('open');
+}
+
+function deleteLetter(id) {
+  if(!confirm('Delete this letter permanently?')) return;
+  setData('wdLetters',getData('wdLetters',[]).filter(function(l){return l.id!==id;}));
+  renderLetters();
+}
+
+function renderLetters() {
+  var letters = getData('wdLetters',[]);
+  var el = document.getElementById('letterVault');
+  if(!el) return;
+  if(!letters.length){ el.innerHTML='<div style="color:var(--muted);font-style:italic;font-size:15px">No letters written yet. Start with one truth you want him to carry forever.</div>'; return; }
+  el.innerHTML = letters.map(function(l){
+    return '<div class="letter-card">' +
+      '<div class="letter-card-type">'+(l.type==='age'?'\U0001f4c5 Age-Based':'\U0001f3c6 Milestone')+'</div>' +
+      '<div class="letter-card-title">'+l.title+'</div>' +
+      '<div style="display:inline-block;background:rgba(160,96,255,0.12);border:1px solid rgba(160,96,255,0.25);border-radius:10px;padding:3px 10px;font-size:12px;color:#a060ff;font-family:Cinzel,serif;letter-spacing:0.08em;margin-bottom:8px">'+l.tag+'</div>' +
+      '<div class="letter-card-preview">'+l.preview+'</div>' +
+      '<div class="letter-expanded" id="le-'+l.id+'">'+l.body+'</div>' +
+      '<div style="display:flex;gap:8px;margin-top:10px;align-items:center">' +
+        '<button class="btn-sm" data-lid="'+l.id+'" onclick="toggleLetter(this.dataset.lid)">Read / Hide</button>' +
+        '<button class="btn-danger" data-lid="'+l.id+'" onclick="deleteLetter(this.dataset.lid)">Delete</button>' +
+        '<span class="letter-card-date">Written '+l.date+'</span>' +
+      '</div></div>';
+  }).join('');
+}
+
+// ============ WEEKLY IDEA ============
+function postIdea() {
+  var ticker = document.getElementById('wi-ticker').value.trim().toUpperCase();
+  var title = document.getElementById('wi-title').value.trim();
+  var thesis = document.getElementById('wi-thesis').value.trim();
+  var type = document.getElementById('wi-type').value;
+  var entry = document.getElementById('wi-entry').value.trim();
+  var timeframe = document.getElementById('wi-timeframe').value;
+  var risk = document.getElementById('wi-risk').value;
+  if(!ticker||!thesis){ showToast('Ticker and thesis required.'); return; }
+  var ideas = getData('wdIdeas',[]);
+  ideas.unshift({id:'i'+Date.now(),ticker,title,thesis,type,entry,timeframe,risk,date:new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}),week:'Week of '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});
+  setData('wdIdeas',ideas.slice(0,52));
+  ['wi-ticker','wi-title','wi-thesis','wi-entry'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+  renderIdeas(); showToast('Idea posted \U0001f4c8');
+}
+
+function deleteIdea(id) {
+  setData('wdIdeas',getData('wdIdeas',[]).filter(function(x){return x.id!==id;}));
+  renderIdeas();
+}
+
+function renderIdeas() {
+  var ideas = getData('wdIdeas',[]);
+  var el = document.getElementById('ideasFeed');
+  if(!el) return;
+  if(!ideas.length){ el.innerHTML='<div style="color:var(--muted);font-style:italic;font-size:15px">No ideas posted yet. Drop your first one above.</div>'; return; }
+  var riskLabels={low:'\U0001f7e2 Low Risk',medium:'\U0001f7e1 Medium Risk',high:'\U0001f534 High Reward'};
+  el.innerHTML = ideas.map(function(idea){
+    return '<div class="idea-card">' +
+      '<div class="idea-card-header"><div><div class="idea-ticker">'+idea.ticker+'</div></div><span class="idea-type">'+idea.type+'</span></div>' +
+      (idea.title?'<div class="idea-title">'+idea.title+'</div>':'') +
+      '<div class="idea-thesis">"'+idea.thesis+'"</div>' +
+      '<div class="idea-meta">'+(idea.entry?'<span class="idea-tag">Entry: '+idea.entry+'</span>':'')+'<span class="idea-tag">'+idea.timeframe+'</span><span class="idea-tag risk-'+idea.risk+'">'+(riskLabels[idea.risk]||idea.risk)+'</span></div>' +
+      '<div class="idea-date">'+idea.week+' \u00b7 Posted '+idea.date+'</div>' +
+      '<div class="idea-disclaimer">\u26a0 Personal opinion only. Not financial advice.</div>' +
+      '<button class="btn-danger" style="margin-top:10px" data-iid="'+idea.id+'" onclick="deleteIdea(this.dataset.iid)">Remove</button>' +
+    '</div>';
+  }).join('');
+}
+
+// ============ MEMORIES ============
+function initMemoryTags() {
+  var el = document.getElementById('memTagSelect');
+  if(!el||!MEM_TAGS||!MEM_TAGS.length) return;
+  el.innerHTML = MEM_TAGS.map(function(t){
+    return '<div class="mem-tag" id="mtag-'+t.id+'" data-tid="'+t.id+'" onclick="selectMemTag(this.dataset.tid)">'+t.label+'</div>';
+  }).join('');
+}
+
+function selectMemTag(id) {
+  activeMemTag = id;
+  MEM_TAGS.forEach(function(t){ var el=document.getElementById('mtag-'+t.id); if(el) el.classList.toggle('selected',t.id===id); });
+}
+
+function previewMemory(input) {
+  var file = input.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    pendingMemData = e.target.result;
+    var preview = document.getElementById('memPreview');
+    preview.src = pendingMemData;
+    preview.style.display = 'block';
+    document.getElementById('uploadZone').style.borderColor = 'var(--gold)';
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveMemory() {
+  if(!pendingMemData){ showToast('Add a photo first.'); return; }
+  if(!activeMemTag){ showToast('Choose a tag.'); return; }
+  var id = 'm'+Date.now();
+  var tagObj = MEM_TAGS.find(function(t){ return t.id===activeMemTag; });
+  var meta = {id,tag:activeMemTag,tagLabel:tagObj?tagObj.label:activeMemTag,date:new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}),dateKey:getLocalDateKey(),ts:Date.now()};
+  savePhotoIDB(id,pendingMemData).then(function(){
+    var memories = getData('wdMemories',[]);
+    memories.unshift(meta);
+    setData('wdMemories',memories);
+    pendingMemData=null;
+    document.getElementById('memPreview').style.display='none';
+    document.getElementById('memPreview').src='';
+    document.getElementById('memFile').value='';
+    document.getElementById('uploadZone').style.borderColor='';
+    activeMemTag=null;
+    MEM_TAGS.forEach(function(t){ var el=document.getElementById('mtag-'+t.id); if(el) el.classList.remove('selected'); });
+    renderMemories(); updateMemStats();
+    showToast('Memory saved \U0001f4f8');
+  }).catch(function(){ showToast('Error saving photo. Try again.'); });
+}
+
+function deleteMemory(id) {
+  setData('wdMemories',getData('wdMemories',[]).filter(function(m){return m.id!==id;}));
+  deletePhotoIDB(id).catch(function(){});
+  renderMemories(); updateMemStats();
+}
+
+function openLightbox(id) {
+  var memories = getData('wdMemories',[]);
+  var m = memories.find(function(x){return x.id===id;});
+  if(!m) return;
+  document.getElementById('lightboxTag').textContent=m.tagLabel;
+  document.getElementById('lightboxDate').textContent=m.date;
+  document.getElementById('memLightbox').classList.add('open');
+  document.getElementById('lightboxImg').src='';
+  getPhotoIDB(id).then(function(dataUrl){ if(dataUrl) document.getElementById('lightboxImg').src=dataUrl; }).catch(function(){});
+}
+
+function closeLightbox() {
+  document.getElementById('memLightbox').classList.remove('open');
+}
+
+function filterMemories(tag) {
+  activeMemFilter=tag;
+  document.querySelectorAll('.mem-filter-btn').forEach(function(b){ b.classList.toggle('active',b.dataset.tag===tag); });
+  renderMemories();
+}
+
+function renderMemories() {
+  var memories = getData('wdMemories',[]);
+  var filtered = activeMemFilter==='All'?memories:memories.filter(function(m){return m.tag===activeMemFilter;});
+  var filterEl = document.getElementById('memFilter');
+  if(filterEl){
+    var allTags=['All'].concat(MEM_TAGS.map(function(t){return t.id;}));
+    filterEl.innerHTML=allTags.map(function(tag){
+      var label=tag==='All'?'All':(MEM_TAGS.find(function(t){return t.id===tag;})||{}).label||tag;
+      var hasItems=tag==='All'||memories.some(function(m){return m.tag===tag;});
+      if(!hasItems) return '';
+      return '<button class="filter-tag mem-filter-btn'+(tag===activeMemFilter?' active':'')+'" data-tag="'+tag+'" onclick="filterMemories(\''+tag+'\')">'+label+'</button>';
+    }).join('');
+  }
+  var el = document.getElementById('memTimeline');
+  if(!el) return;
+  if(!filtered.length){ el.innerHTML='<div class="mem-empty"><div class="mem-empty-icon">\U0001f4f8</div><div class="mem-empty-text">'+(activeMemFilter==='All'?'No memories yet. Start capturing your journey.':'No memories with this tag yet.')+'</div></div>'; return; }
+  var groups={};
+  filtered.forEach(function(m){ if(!groups[m.dateKey]) groups[m.dateKey]={label:m.date,items:[]}; groups[m.dateKey].items.push(m); });
+  el.innerHTML=Object.keys(groups).sort(function(a,b){return b.localeCompare(a);}).map(function(key){
+    var group=groups[key];
+    return '<div class="mem-date-group"><div class="mem-date-label">'+group.label+'</div><div class="mem-grid">'+
+      group.items.map(function(m){
+        return '<div class="mem-card" id="mcard-'+m.id+'" data-memid="'+m.id+'">' +
+          '<img id="mimg-'+m.id+'" src="" alt="memory" loading="lazy" style="opacity:0;transition:opacity 0.3s">' +
+          '<div class="mem-card-overlay"><div class="mem-card-tag">'+m.tagLabel+'</div></div>' +
+          '<button class="mem-card-delete" data-memid="'+m.id+'">\u2715</button>' +
+        '</div>';
+      }).join('')+
+    '</div></div>';
+  }).join('');
+  el.querySelectorAll('.mem-card').forEach(function(card){
+    card.addEventListener('click',function(e){ if(e.target.classList.contains('mem-card-delete')) return; openLightbox(card.dataset.memid); });
+  });
+  el.querySelectorAll('.mem-card-delete').forEach(function(btn){
+    btn.addEventListener('click',function(e){ e.stopPropagation(); deleteMemory(btn.dataset.memid); });
+  });
+  filtered.forEach(function(m){
+    getPhotoIDB(m.id).then(function(dataUrl){ var img=document.getElementById('mimg-'+m.id); if(img&&dataUrl){img.src=dataUrl;img.style.opacity='1';} }).catch(function(){});
+  });
+}
+
+function updateMemStats() {
+  var memories = getData('wdMemories',[]);
+  var t=document.getElementById('ms-total'); if(t) t.textContent=memories.length;
+  var s=document.getElementById('ms-son'); if(s) s.textContent=memories.filter(function(m){return m.tag==='son'||m.tag==='sports';}).length;
+  var w=document.getElementById('ms-wins'); if(w) w.textContent=memories.filter(function(m){return m.tag==='investing'||m.tag==='money';}).length;
+  var mi=document.getElementById('ms-mile'); if(mi) mi.textContent=memories.filter(function(m){return m.tag==='milestone';}).length;
+}
+
+// ============ READING TRACKER ============
+var activeBookFilter = 'All';
+
+function switchLessonTab(tab) {
+  ['wisdom','reading'].forEach(function(t){
+    var view=document.getElementById('lview-'+t); if(view) view.style.display=t===tab?'block':'none';
+    var btn=document.getElementById('ltab-'+t); if(btn) btn.classList.toggle('active',t===tab);
+  });
+  if(tab==='reading'){ renderBooks(); updateBookStats(); }
+}
+
+function switchMissionTab(tab) {
+  ['weekly','monthly','mantra','reading'].forEach(function(t){
+    var view=document.getElementById('mview-'+t); if(view) view.style.display=t===tab?'block':'none';
+    var btn=document.getElementById('mtab-'+t); if(btn) btn.classList.toggle('active',t===tab);
+  });
+}
+
+function switchVaultTab(tab) {
+  ['memories','ideas'].forEach(function(t){
+    var view=document.getElementById('vview-'+t); if(view) view.style.display=t===tab?'block':'none';
+    var btn=document.getElementById('vtab-'+t); if(btn) btn.classList.toggle('active',t===tab);
+  });
+  if(tab==='memories'){ try{renderMemories(); updateMemStats();}catch(e){} }
+}
+
+function saveMantra() {
+  var val = document.getElementById('mantra') ? document.getElementById('mantra').value.trim() : '';
+  if(val) { localStorage.setItem('wdMantra', val); showToast('Mantra saved ⚔'); }
+}
+
+function saveReadingReflect() {
+  var val = document.getElementById('readingReflect') ? document.getElementById('readingReflect').value.trim() : '';
+  if(val) { localStorage.setItem('wdReadingReflect', val); showToast('Reflection saved 📚'); }
+}
+
+function addBook() {
+  var title=document.getElementById('rb-title').value.trim();
+  var author=document.getElementById('rb-author').value.trim();
+  if(!title){ showToast('Book title required.'); return; }
+  var books=getData('wdBooks',[]);
+  books.unshift({id:'bk'+Date.now(),title,author,cat:document.getElementById('rb-cat').value,status:document.getElementById('rb-status').value,takeaway:document.getElementById('rb-takeaway').value.trim(),rating:document.getElementById('rb-rating').value,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});
+  setData('wdBooks',books);
+  document.getElementById('rb-title').value='';
+  document.getElementById('rb-author').value='';
+  document.getElementById('rb-takeaway').value='';
+  document.getElementById('rb-rating').value='';
+  renderBooks(); updateBookStats(); showToast('Book added \U0001f4da');
+}
+
+function updateBookStatus(btn) {
+  var id=btn.dataset.id; var status=btn.dataset.st;
+  var books=getData('wdBooks',[]);
+  var b=books.find(function(x){return x.id===id;});
+  if(b) b.status=status;
+  setData('wdBooks',books); renderBooks(); updateBookStats();
+  showToast(status==='done'?'Book finished \U0001f525':'Updated \u2694');
+}
+
+function deleteBook(btn) {
+  var id=btn.dataset.id;
+  setData('wdBooks',getData('wdBooks',[]).filter(function(b){return b.id!==id;}));
+  renderBooks(); updateBookStats();
+}
+
+function filterBooks(f) {
+  activeBookFilter=f;
+  document.querySelectorAll('.book-filter-btn').forEach(function(b){ b.classList.toggle('active',b.dataset.filter===f); });
+  renderBooks();
+}
+
+function updateBookStats() {
+  var books=getData('wdBooks',[]);
+  var t=document.getElementById('rt-total'); if(t) t.textContent=books.length;
+  var d=document.getElementById('rt-done'); if(d) d.textContent=books.filter(function(b){return b.status==='done';}).length;
+  var r=document.getElementById('rt-reading'); if(r) r.textContent=books.filter(function(b){return b.status==='reading';}).length;
+}
+
+function renderBooks() {
+  var books=getData('wdBooks',[]);
+  var filterEl=document.getElementById('bookFilters');
+  if(filterEl) filterEl.innerHTML=['All','reading','done','next'].map(function(f){
+    var label=f==='All'?'All':f==='reading'?'\U0001f4d6 Reading':f==='done'?'\u2705 Finished':'\u23f3 Up Next';
+    var hasItems=f==='All'||books.some(function(b){return b.status===f;});
+    if(!hasItems) return '';
+    return '<button class="filter-tag book-filter-btn'+(f===activeBookFilter?' active':'')+'" data-filter="'+f+'" onclick="filterBooks(\''+f+'\')">'+label+'</button>';
+  }).join('');
+  var el=document.getElementById('bookList');
+  if(!el) return;
+  var filtered=activeBookFilter==='All'?books:books.filter(function(b){return b.status===activeBookFilter;});
+  if(!filtered.length){ el.innerHTML='<div style="color:var(--muted);font-style:italic;font-size:15px">'+(activeBookFilter==='All'?'No books tracked yet. What are you reading?':'No books in this category.')+'</div>'; return; }
+  var stars=['','\u2b50','\u2b50\u2b50','\u2b50\u2b50\u2b50','\u2b50\u2b50\u2b50\u2b50','\u2b50\u2b50\u2b50\u2b50\u2b50'];
+  var statusLabels={reading:'Reading',done:'Finished',next:'Up Next'};
+  el.innerHTML=filtered.map(function(b){
+    return '<div class="book-card status-'+b.status+'">' +
+      '<div class="book-title">'+b.title+'</div>' +
+      (b.author?'<div class="book-author">by '+b.author+'</div>':'') +
+      '<div class="book-meta"><span class="book-tag">'+b.cat+'</span><span class="book-status-badge '+b.status+'">'+statusLabels[b.status]+'</span></div>' +
+      (b.takeaway?'<div class="book-takeaway">"'+b.takeaway+'"</div>':'') +
+      (b.rating?'<div class="book-rating">'+stars[parseInt(b.rating)]+'</div>':'') +
+      '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">' +
+        (b.status!=='done'?'<button class="btn-sm" data-id="'+b.id+'" data-st="done" onclick="updateBookStatus(this)">Mark Finished</button>':'') +
+        (b.status!=='reading'?'<button class="btn-sm" data-id="'+b.id+'" data-st="reading" onclick="updateBookStatus(this)">Reading Now</button>':'') +
+        '<button class="btn-danger" data-id="'+b.id+'" onclick="deleteBook(this)">Remove</button>' +
+        '<span class="book-date">Added '+b.date+'</span>' +
+      '</div></div>';
+  }).join('');
+}
+
+// ============ DRIFTER ============
+var drifterTimerInterval = null;
+var drifterSeconds = 300;
+var drifterRunning = false;
+
+function getTodayKey() { return getLocalDateKey(); }
+function getTodayDrifter() { var all=getData('wdDrifter',[]); return all.find(function(e){return e.dateKey===getTodayKey();})||null; }
+
+function saveDrifterProgress(fields) {
+  var all=getData('wdDrifter',[]);
+  var todayKey=getTodayKey();
+  var idx=all.findIndex(function(e){return e.dateKey===todayKey;});
+  var base=idx>=0?all[idx]:{dateKey:todayKey,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),completed:false};
+  Object.keys(fields).forEach(function(k){base[k]=fields[k];});
+  if(idx>=0) all[idx]=base; else all.unshift(base);
+  setData('wdDrifter',all.slice(0,60));
+}
+
+function initDrifter() {
+  renderDrifterStreak();
+  var todayEntry=getTodayDrifter();
+  if(todayEntry&&todayEntry.completed) restoreDrifterComplete(todayEntry);
+  else if(todayEntry&&todayEntry.prompt) restoreDrifterInProgress(todayEntry);
+  else loadDrifterPrompt();
+}
+
+function restoreDrifterComplete(entry) {
+  document.getElementById('drifterBody').style.display='none';
+  document.getElementById('drifterComplete').classList.add('show');
+  document.getElementById('drifterCompleteMsg').textContent='"'+entry.move+'" is locked in. Now execute.';
+  var timer=document.getElementById('drifterTimer'); if(timer){timer.textContent='Done';timer.style.color='var(--green-bright)';}
+}
+
+function restoreDrifterInProgress(entry) {
+  var promptEl=document.getElementById('drifterPrompt'); if(promptEl&&entry.prompt) promptEl.textContent=entry.prompt;
+  if(entry.reflect){ var re=document.getElementById('drifterReflect'); if(re) re.value=entry.reflect; }
+  if(entry.move){ var me=document.getElementById('drifterMove'); if(me) me.value=entry.move; }
+}
+
+function renderDrifterStreak() {
+  var log=getData('wdLog',[]);
+  var streak=0; var checkDate=new Date();
+  for(var i=0;i<60;i++){
+    var k=checkDate; var key=k.getFullYear()+'-'+String(k.getMonth()+1).padStart(2,'0')+'-'+String(k.getDate()).padStart(2,'0');
+    if(log.find(function(e){return e.dateKey===key;})){ if(i===0||streak>0) streak++; } else if(i>0){ break; }
+    checkDate.setDate(checkDate.getDate()-1);
+  }
+  var el=document.getElementById('drifterStreakNum'); if(el) el.textContent=streak;
+  var msg=document.getElementById('drifterStreakMsg');
+  if(msg){ var sonName=getSonName(); if(streak>=7) msg.textContent='A week straight. '+sonName+' has a warrior for a father.'; else if(streak>=3) msg.textContent=streak+' days strong. Keep the chain unbroken.'; else if(streak>=1) msg.textContent='You showed up. Now do it again tomorrow.'; else msg.textContent='Seal your day to start your streak.'; }
+}
+
+function startDrifterTimer() {
+  if(drifterRunning) return;
+  drifterRunning=true;
+  drifterTimerInterval=setInterval(function(){
+    drifterSeconds--;
+    var m=Math.floor(drifterSeconds/60); var s=drifterSeconds%60;
+    var el=document.getElementById('drifterTimer');
+    if(el) el.textContent=m+':'+(s<10?'0':'')+s;
+    if(drifterSeconds<=0){ clearInterval(drifterTimerInterval); if(el){el.textContent='Done';el.style.color='var(--green-bright)';} }
+    if(drifterSeconds===60){ if(el) el.style.color='var(--orange)'; }
+  },1000);
+}
+
+async function loadDrifterPrompt() {
+  var promptEl=document.getElementById('drifterPrompt'); if(!promptEl) return;
+  var todayEntry=getTodayDrifter();
+  if(todayEntry&&todayEntry.prompt){ promptEl.textContent=todayEntry.prompt; if(!drifterRunning) startDrifterTimer(); return; }
+  promptEl.innerHTML='<div class="drifter-prompt-loading"><div class="drifter-dot"></div><div class="drifter-dot"></div><div class="drifter-dot"></div></div>';
+  if(!drifterRunning) startDrifterTimer();
+  var log=getData('wdLog',[]); var last3=log.slice(0,3);
+  var habits=getData('wdDailyTasks',[]); var fears=getData('wdFears',[]).filter(function(f){return !f.conquered;});
+  var sonName=getSonName();
+  var context='User is a warrior father. Son: '+sonName+'. ';
+  if(last3.length){ var avgScore=Math.round(last3.reduce(function(a,e){return a+(e.score||0);},0)/last3.length); context+='Recent habit avg: '+avgScore+'/7. '; }
+  if(fears.length) context+='Active fears: '+fears.slice(0,2).map(function(f){return f.name;}).join(', ')+'. ';
+  if(habits.length){ var undone=habits.filter(function(t){return !t.done;}).length; if(undone) context+=undone+' daily tasks still open. '; }
+  var question=null;
+  try {
+    if (isBackendEnabled() && AUTH.token) {
+      // Secure backend route
+      var drifterResult = await apiCall('POST', '/api/ai/drifter', {
+        sonName: sonName,
+        habitAvg: last3.length ? Math.round(last3.reduce(function(a,e){return a+(e.score||0);},0)/last3.length) : undefined,
+        missedHabits: (function(){
+          var missed = [];
+          ['workout','read','invest','present','meditate','noscroll','learn'].forEach(function(h){
+            if(last3.filter(function(e){return !(e.habits||[]).includes(h);}).length>=2) missed.push(h);
+          });
+          return missed;
+        })(),
+        activeFears: fears.slice(0,2).map(function(f){return f.name;}),
+        openTasks: habits.filter(function(t){return !t.done;}).length
+      });
+      question = drifterResult ? drifterResult.prompt : null;
+      if(!question) throw new Error('no prompt from backend');
+    } else {
+      // Fallback: direct call
+      var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:80,system:'You are a sharp accountability coach. Generate ONE powerful question (max 20 words) calling out where this warrior father is drifting. No preamble.',messages:[{role:'user',content:'My data: '+context+' Give me my brain prompt question.'}]})});
+      var data=await res.json();
+      question=data.content&&data.content[0]?'"'+data.content[0].text.trim()+'"':null;
+      if(!question) throw new Error('no content');
+    }
+  } catch(e){
+    var fallbacks=['"Where are you drifting that you have been pretending not to notice?"','"What task have you been avoiding that would actually move the needle?"','"If your son was watching your habits this week \u2014 what would he see?"','"What excuse have you used most this week to avoid the hard work?"','"Where are you comfortable when you should be uncomfortable?"'];
+    question=fallbacks[new Date().getDay()%fallbacks.length];
+  }
+  promptEl.textContent=question;
+  saveDrifterProgress({prompt:question});
+}
+
+function toggleDrifterCheck(id) { var el=document.getElementById(id); if(el) el.classList.toggle('checked'); }
+
+function scheduleDrifterMove() {
+  var move=document.getElementById('drifterMove').value.trim();
+  if(!move){ showToast('Write your non-negotiable move first.'); return; }
+  saveDrifterProgress({move});
+  var tasks=getData('wdDailyTasks',[]);
+  tasks.unshift({id:'dt'+Date.now(),title:move,cat:'\u26a1 Drifter Move',time:'',done:false,dateAdded:getLocalDateKey()});
+  setData('wdDailyTasks',tasks);
+  showToast('Move added to today\'s tasks \u2694');
+}
+
+function completeDrifter() {
+  var move=document.getElementById('drifterMove').value.trim();
+  var reflect=document.getElementById('drifterReflect').value.trim();
+  if(!move){ showToast('Write your non-negotiable move first.'); return; }
+  saveDrifterProgress({reflect,move,completed:true});
+  var tasks=getData('wdDailyTasks',[]);
+  if(!tasks.some(function(t){return t.title===move&&t.cat==='\u26a1 Drifter Move';})){
+    tasks.unshift({id:'dt'+Date.now(),title:move,cat:'\u26a1 Drifter Move',time:'',done:false,dateAdded:getLocalDateKey()});
+    setData('wdDailyTasks',tasks);
+  }
+  if(drifterTimerInterval) clearInterval(drifterTimerInterval);
+  document.getElementById('drifterBody').style.display='none';
+  document.getElementById('drifterComplete').classList.add('show');
+  document.getElementById('drifterCompleteMsg').textContent='"'+move+'" is locked in. Now execute.';
+  showToast('Drifter complete \U0001f525 Now execute.');
+}
+
+function resetDrifter() {
+  var all=getData('wdDrifter',[]); setData('wdDrifter',all.filter(function(e){return e.dateKey!==getTodayKey();}));
+  drifterSeconds=300; drifterRunning=false;
+  if(drifterTimerInterval) clearInterval(drifterTimerInterval);
+  var timer=document.getElementById('drifterTimer'); if(timer){timer.textContent='5:00';timer.style.color='#00b4ff';}
+  document.getElementById('drifterBody').style.display='grid';
+  document.getElementById('drifterComplete').classList.remove('show');
+  var re=document.getElementById('drifterReflect'); if(re) re.value='';
+  var me=document.getElementById('drifterMove'); if(me) me.value='';
+  ['dc1','dc2'].forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('checked'); });
+  loadDrifterPrompt();
+}
+
+// ============ COUNT UP ============
+function animateCountUp(elId, target) {
+  var el=document.getElementById(elId); if(!el) return;
+  var start=parseInt(el.textContent)||0;
+  if(start===target){el.textContent=target;return;}
+  var duration=800; var startTime=null;
+  function step(ts){ if(!startTime) startTime=ts; var progress=Math.min((ts-startTime)/duration,1); var ease=1-Math.pow(1-progress,3); el.textContent=Math.round(start+(target-start)*ease); if(progress<1) requestAnimationFrame(step); else el.textContent=target; }
+  requestAnimationFrame(step);
+}
+
+// ============ AUTH ============
+async function loginUser(email, password) {
+  var result = await apiCall('POST', '/api/auth/login', { email, password });
+  if (!result) return { error: 'Cannot reach server. Check your connection.' };
+  if (result.error) return result;
+
+  AUTH.token = result.token;
+  AUTH.email = result.user.email;
+  AUTH.sonName = result.user.sonName;
+  localStorage.setItem('wdAuthToken', result.token);
+
+  // Sync cloud data into local
+  await syncFromCloud();
+  if (result.user.sonName) {
+    localStorage.setItem('wdSonName', result.user.sonName);
+    applySonName(result.user.sonName);
+  }
+
+  return { success: true, user: result.user };
+}
+
+async function registerUser(email, password, sonName) {
+  var result = await apiCall('POST', '/api/auth/register', { email, password, sonName });
+  if (!result) return { error: 'Cannot reach server. Check your connection.' };
+  if (result.error) return result;
+
+  AUTH.token = result.token;
+  AUTH.email = result.user.email;
+  AUTH.sonName = result.user.sonName;
+  localStorage.setItem('wdAuthToken', result.token);
+
+  // Push existing local data to cloud
+  await syncToCloud();
+
+  return { success: true, user: result.user };
+}
+
+function logoutUser() {
+  AUTH.token = null;
+  AUTH.email = null;
+  AUTH.sonName = null;
+  localStorage.removeItem('wdAuthToken');
+  showToast('Logged out.');
+}
+
+async function checkAuthStatus() {
+  if (!isBackendEnabled() || !AUTH.token) return;
+  var result = await apiCall('GET', '/api/auth/me');
+  if (result && result.id) {
+    AUTH.email = result.email;
+    AUTH.sonName = result.sonName;
+    // Sync cloud data on app resume
+    await syncFromCloud();
+  } else {
+    // Token expired or invalid
+    AUTH.token = null;
+    localStorage.removeItem('wdAuthToken');
+  }
+}
+
+// ============ AUTH UI ============
+var currentAuthTab = 'login';
+
+function showAuthModal() {
+  if (!isBackendEnabled()) return; // no backend = no auth modal
+  var modal = document.getElementById('authModal');
+  if (modal) modal.classList.add('open');
+}
+
+function hideAuthModal() {
+  var modal = document.getElementById('authModal');
+  if (modal) modal.classList.remove('open');
+}
+
+function skipAuth() {
+  hideAuthModal();
+  // Show setup modal for son's name if needed
+  var sonName = localStorage.getItem('wdSonName');
+  if (!sonName) {
+    var setup = document.getElementById('setupModal');
+    if (setup) setup.style.display = 'flex';
+  }
+}
+
+function switchAuthTab(tab) {
+  currentAuthTab = tab;
+  document.getElementById('authTabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('authTabRegister').classList.toggle('active', tab==='register');
+  document.getElementById('authSonNameWrap').style.display = tab==='register' ? 'block' : 'none';
+  document.getElementById('authSubmitLabel').textContent = tab==='login' ? 'SIGN IN ⚔' : 'CREATE ACCOUNT ⚔';
+  document.getElementById('authError').textContent = '';
+}
+
+async function submitAuth() {
+  var email = document.getElementById('authEmail').value.trim();
+  var password = document.getElementById('authPassword').value;
+  var sonName = document.getElementById('authSonName').value.trim();
+  var errEl = document.getElementById('authError');
+  var btn = document.getElementById('authSubmitBtn');
+
+  if (!email || !password) { errEl.textContent = 'Email and password required.'; return; }
+
+  btn.disabled = true;
+  document.getElementById('authSubmitLabel').textContent = 'Working...';
+  errEl.textContent = '';
+
+  var result = currentAuthTab === 'login'
+    ? await loginUser(email, password)
+    : await registerUser(email, password, sonName);
+
+  btn.disabled = false;
+  document.getElementById('authSubmitLabel').textContent = currentAuthTab==='login' ? 'SIGN IN ⚔' : 'CREATE ACCOUNT ⚔';
+
+  if (result.error) {
+    errEl.textContent = result.error;
+    return;
+  }
+
+  hideAuthModal();
+
+  // Apply son name from account
+  if (result.user.sonName) {
+    localStorage.setItem('wdSonName', result.user.sonName);
+    applySonName(result.user.sonName);
+  } else {
+    // Show setup modal if no son name set yet
+    var sonNameLocal = localStorage.getItem('wdSonName');
+    if (!sonNameLocal) {
+      var setup = document.getElementById('setupModal');
+      if (setup) setup.style.display = 'flex';
+    }
+  }
+
+  // Update auth status bar
+  updateAuthStatusBar();
+
+  // Re-render everything with synced data
+  try { renderLog(); renderGoals(); renderFears(); renderLetters(); renderReport(); } catch(e) {}
+  showToast('Welcome back, Warrior. ⚔');
+}
+
+function updateAuthStatusBar() {
+  var el = document.getElementById('authStatus');
+  if (!el) return;
+  if (!isBackendEnabled()) { el.textContent = ''; return; }
+  if (AUTH.token && AUTH.email) {
+    el.innerHTML = '🔒 Synced · ' + AUTH.email + ' · <span style="cursor:pointer;text-decoration:underline" onclick="logoutUser()">Sign out</span>';
+  } else {
+    el.innerHTML = '⚠ Local only · <span style="cursor:pointer;text-decoration:underline;color:var(--gold)" onclick="showAuthModal()">Sign in to sync</span>';
+  }
+}
+
+// ============ TOAST ============
+function showToast(msg, duration) {
+  var t=document.getElementById('toast');
+  if(!t) return;
+  t.textContent=msg;
+  t.classList.remove('show');
+  void t.offsetWidth;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, duration||2800);
+}
+
+// ============ RESET DAY ============
+function resetDay() {
+  if(!confirm('Reset today\'s entries? This cannot be undone.')) return;
+  document.getElementById('intention').value='';
+  document.getElementById('lesson').value='';
+  document.getElementById('journal').value='';
+  document.getElementById('aiBubble').style.display='none';
+  var irEl=document.getElementById('investReflect'); if(irEl) irEl.value='';
+  checkedHabits.clear();
+  HABITS.forEach(function(h){ var card=document.getElementById('hc-'+h.id); if(card) card.classList.remove('done'); });
+  document.getElementById('scoreText').textContent='0 / '+HABITS.length;
+  document.getElementById('scoreBar').style.width='0%';
+  showToast('Fresh start. Make it count. \u2694');
+}
+
+// ============ DOM READY ============
+// ============ SINGLE CLEAN INIT ============
+function initApp() {
+  // Build habits grid — guard against double-run
+  var grid = document.getElementById('habitsGrid');
+  if(grid && grid.children.length === 0) {
+    HABITS.forEach(function(h) {
+      var c = document.createElement('div');
+      c.className = 'habit-card'; c.id = 'hc-'+h.id;
+      c.innerHTML = '<div class="hcheck" id="hck-'+h.id+'">✓</div><span class="habit-icon">'+h.icon+'</span><span class="habit-name">'+h.name+'</span>';
+      c.addEventListener('click', function(){ toggleHabit(h.id); });
+      grid.appendChild(c);
+    });
+  }
+
+  // Nav — use once flag to prevent duplicate listeners
+  var nav = document.getElementById('mainNav');
+  if(nav && !nav._listenerAdded) {
+    nav.addEventListener('click', function(e) {
+      var btn = e.target.closest('.nav-btn');
+      if(!btn) return;
+      showPage(btn.dataset.page, btn);
+    });
+    nav._listenerAdded = true;
+  }
+
+  // Setup button
+  var beginBtn = document.getElementById('beginJourneyBtn');
+  if(beginBtn) beginBtn.onclick = finishSetup;
+
+  // Wire addDailyTask button on Today page
+  var addTaskBtn = document.getElementById('addDailyTaskBtn');
+  if(addTaskBtn) addTaskBtn.addEventListener('click', addDailyTask);
+
+  // Restore saved mantra and reading reflect
+  var savedMantra = localStorage.getItem('wdMantra');
+  if(savedMantra) { var me = document.getElementById('mantra'); if(me) me.value = savedMantra; }
+  var savedReading = localStorage.getItem('wdReadingReflect');
+  if(savedReading) { var re = document.getElementById('readingReflect'); if(re) re.value = savedReading; }
+
+  // Date display
+  var _dd = document.getElementById('dateDisplay');
+  if(_dd) _dd.textContent = initNow.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  renderQuote();
+  checkFirstOpen();
+  checkDailyTaskReset();
+  renderLog();
+  // Check backend auth status on load (non-blocking)
+  if(isBackendEnabled()) { checkAuthStatus().catch(function(){}); }
+  try{ initDrifter(); }catch(e){}
+  try{ renderLessons(); }catch(e){}
+  try{ renderGoals(); }catch(e){}
+  try{ renderReport(); }catch(e){}
+  try{ updateBookStats(); }catch(e){}
+  try{ renderWarriorDadScore(); }catch(e){}
+  try{ renderLetters(); }catch(e){}
+  try{ renderFears(); }catch(e){}
+  try{ renderLegacy(); }catch(e){}
+  try{ renderMirrorHistory(); }catch(e){}
+  try{ renderIdeas(); }catch(e){}
+  try{ initMemoryTags(); }catch(e){}
+  try{ renderMemories(); }catch(e){}
+  try{ updateMemStats(); }catch(e){}
+
+  // Hero flames — guard against double-run
+  var fc = document.getElementById('heroFlames');
+  if(fc && fc.children.length === 0) {
+    var cols = ['#f0c040','#e8621a','#c0200a','#ff8020','#ffcc00'];
+    for(var i=0; i<22; i++){
+      var fl = document.createElement('div');
+      fl.className = 'hero-flame';
+      var w = Math.random()*18+8;
+      fl.style.cssText = 'width:'+w+'px;height:'+(w*1.8)+'px;background:'+cols[Math.floor(Math.random()*5)]+';left:'+Math.random()*100+'%;animation-duration:'+(Math.random()*2+1.5)+'s;animation-delay:'+(Math.random()*2)+'s;opacity:0';
+      fc.appendChild(fl);
+    }
+  }
+}
+
+// Run once when DOM is ready
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>
